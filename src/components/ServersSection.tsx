@@ -77,12 +77,14 @@ export const ServersSection = () => {
 
               <div className="flex items-center gap-3 text-foreground py-2">
                 <Users className="h-5 w-5 text-primary" />
-                {currentServer.robloxServerId ? (
+{currentServer.robloxServerId ? (
                   <span className="font-bold font-rajdhani text-lg tracking-wider">
                     {robloxStatus.loading ? (
                       "CARREGANDO..."
                     ) : robloxStatus.error ? (
                       <span className="text-red-500">OFFLINE NO MOMENTO</span>
+                    ) : robloxStatus.players === 0 ? (
+                      <span className="text-red-500">OFFLINE</span>
                     ) : (
                       <span className="text-green-400 font-bold">
                         {robloxStatus.players} / {robloxStatus.max} ONLINE
