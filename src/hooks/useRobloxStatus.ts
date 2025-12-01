@@ -28,15 +28,21 @@ export const useRobloxStatus = (serverId: string | null): RobloxStatus => {
         const res = await fetch(`/api/roblox/${serverId}`);
         const data = await res.json();
 
-        setStatus({
-          players: data.players || 0,
-          max: data.max || 1000,
-          loading: false,
-          error: false,
-        });
+        if (data.players != null && data.max != null) {
+          setStatus({
+            players: data.players,
+            max: data.max,
+            loading: false,
+            error: false,
+          });
+        } else {
+ 
+          setStatus(prev => ({ ...prev, loading: false, error: true }));
+        }
       } catch (err) {
         console.error("Erro ao carregar jogadores:", err);
-        setStatus({ players: 0, max: 1000, loading: false, error: true });
+
+        setStatus(prev => ({ ...prev, loading: false, error: true }));
       }
     };
 
