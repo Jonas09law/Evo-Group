@@ -10,9 +10,9 @@ export const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
       {/* Background with characters */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-20">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
+          className="absolute inset-0 bg-cover bg-center opacity-110"
           style={{ backgroundImage: `url(${heroCharacters})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
