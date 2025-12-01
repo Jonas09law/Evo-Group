@@ -5,7 +5,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -21,13 +21,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const data = await response.json();
     const servers = data.data || [];
-    
+
     const players = servers.reduce((sum: number, srv: any) => sum + (srv.playing || 0), 0);
     const max = servers.reduce((sum: number, srv: any) => sum + (srv.maxPlayers || 0), 0);
 
-    return res.json({ players, max: max || 1000 });
+    return res.json({
+      players,
+      max: max || 1000
+    });
   } catch (error) {
     console.error('Erro no proxy Roblox:', error);
-    return res.json({ players: 0, max: 1000 });
+
+    return res.json({ players: null, max: null });
   }
 }
