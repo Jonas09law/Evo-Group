@@ -1,0 +1,300 @@
+import { Card } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useState } from "react";
+
+const updates = [
+
+  {
+  date: "03.12.25",
+  title: "UPDATE 2.03",
+  image: "url-da-imagem",
+  category: "PATCH NOTES",
+  contentText: `
+Sistema de pintar carro
+Arrumado atm
+Adicionado facs de ruas
+DataStore do ***INVENTARIO*** voltou antiga
+Adicionado BMW M4`,
+},
+
+{/*  {
+    date: "26.11.25",
+    title: "Notas de Atualização — 2025.11.26",
+    image: "",
+    category: "PATCH NOTES",
+    content: {
+      sections: [
+        {
+          title: "Cupons",
+          emoji: "🎫",
+          items: [
+            { icon: "🎁", text: 'Cupom de primeira compra: "primeiracompra" — 20% de desconto' },
+            { icon: "🎁", text: 'Cupom Black Friday: "black26" — 25% de desconto' },
+          ],
+        },
+        {
+          title: "Economia",
+          emoji: "⚙️",
+          items: [
+            { 
+              icon: "✅", 
+              text: "Valor inicial para novos jogadores reajustado para R$60.000",
+              details: "Jogadores que criaram a conta nos últimos 30 dias e possuíam menos de 100.000 ganharam o bônus de 60.00 no banco nessa atualização."
+            },
+            { 
+              icon: "✅", 
+              text: "Adicionados bônus semanais para:",
+              details: "Empregos legais\nEmpregos ilegais"
+            },
+          ],
+        },
+      ],
+    },
+  },*/}
+];
+
+export default function NewsUpdatesSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedUpdate, setSelectedUpdate] = useState(null);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % updates.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
+  };
+
+  const getVisibleCards = () => {
+    // Se tiver menos de 3 updates, mostra só os que existem sem duplicar
+    const visibleCount = Math.min(3, updates.length);
+    const cards = [];
+    
+    for (let i = 0; i < visibleCount; i++) {
+      const index = (currentIndex + i) % updates.length;
+      cards.push({ ...updates[index], uniqueKey: `${index}-${i}` });
+    }
+    return cards;
+  };
+
+  return (
+    <>
+      <section id="noticias" className="py-24 bg-gradient-hero relative overflow-hidden">
+        {/* Decorative Elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Header */}
+          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2 className="text-5xl md:text-6xl font-bold text-gradient font-rajdhani mb-4 uppercase tracking-wider">
+              NOTÍCIAS & ATUALIZAÇÕES
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto font-rajdhani">
+              Confira o que está acontecendo no Metroverso
+            </p>
+          </div>
+
+          {/* Carousel */}
+          <div className="relative max-w-7xl mx-auto">
+            {/* Navigation Buttons - Só mostra se tiver mais de 3 updates */}
+            {updates.length > 3 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                  aria-label="Previous"
+                >
+                  <ChevronLeft className="w-6 h-6 text-primary" />
+                </button>
+
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                  aria-label="Next"
+                >
+                  <ChevronRight className="w-6 h-6 text-primary" />
+                </button>
+              </>
+            )}
+
+            {/* Cards Container */}
+            <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
+              {getVisibleCards().map((update, idx) => (
+                <Card
+                  key={update.uniqueKey}
+                  onClick={() => setSelectedUpdate(update)}
+                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
+                  style={{ animationDelay: `${idx * 150}ms` }}
+                >
+                  {/* Image Container */}
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={update.image}
+                      alt={update.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    
+                    {/* Date Badge */}
+                    <div className="absolute top-4 left-4 px-3 py-1 bg-background/60 border border-primary rounded-md">
+                      <span className="text-primary text-sm font-bold font-rajdhani">{update.date}</span>
+                    </div>
+
+                    {/* Category Badge */}
+                    <div className="absolute bottom-4 left-4">
+                      <div className="px-4 py-2 bg-background/80 border-b-2 border-primary rounded">
+                        <span className="text-primary font-bold text-sm tracking-wider font-rajdhani">
+                          {update.category}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gradient group-hover:text-primary transition-colors font-rajdhani">
+                      {update.title}
+                    </h3>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Dots Indicator - Só mostra se tiver mais de 3 updates */}
+            {updates.length > 3 && (
+              <div className="flex justify-center gap-2 mt-8">
+                {updates.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      idx === currentIndex
+                        ? "bg-primary w-8"
+                        : "bg-muted hover:bg-muted-foreground"
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal de Detalhes */}
+      {selectedUpdate && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedUpdate(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10"
+            >
+              <X className="w-6 h-6 text-foreground" />
+            </button>
+
+            {/* Header com Imagem */}
+            <div className="relative h-64 overflow-hidden rounded-t-lg">
+              <img
+                src={selectedUpdate.image}
+                alt={selectedUpdate.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+              
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="px-3 py-1 bg-background/60 border border-primary rounded-md">
+                    <span className="text-primary text-sm font-bold font-rajdhani">{selectedUpdate.date}</span>
+                  </div>
+                  <div className="px-4 py-1 bg-background/60 border border-primary rounded-md">
+                    <span className="text-primary font-bold text-sm tracking-wider font-rajdhani">
+                      {selectedUpdate.category}
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gradient font-rajdhani">
+                  {selectedUpdate.title}
+                </h2>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-8 space-y-8">
+              {/* Formato com Seções Customizadas */}
+              {selectedUpdate.content?.sections && selectedUpdate.content.sections.map((section, sectionIdx) => (
+                <div key={sectionIdx}>
+                  <h3 className="text-2xl font-bold text-primary font-rajdhani mb-4 flex items-center gap-2">
+                    {section.emoji} {section.title}
+                  </h3>
+                  <div className="space-y-3">
+                    {section.items.map((item, itemIdx) => (
+                      <div key={itemIdx} className="p-4 bg-card/50 border border-border rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <span className="text-lg">{item.icon}</span>
+                          <div className="flex-1">
+                            <p className="text-foreground font-semibold font-rajdhani mb-1">
+                              {item.text}
+                            </p>
+                            {item.details && (
+                              <p className="text-muted-foreground whitespace-pre-line pl-6 text-sm mt-2">
+                                {item.details}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* Formato Simples com Texto */}
+              {selectedUpdate.contentText && (
+                <div className="space-y-4">
+                  {selectedUpdate.contentText.split('\n').map((line, idx) => {
+                    // Título com **
+                    if (line.startsWith('**') && line.endsWith('**')) {
+                      return (
+                        <h3 key={idx} className="text-xl font-bold text-primary font-rajdhani mt-6 mb-2">
+                          {line.replace(/\*\*/g, '')}
+                        </h3>
+                      );
+                    }
+                    // Texto com ***
+                    if (line.includes('***')) {
+                      const parts = line.split(/\*\*\*(.*?)\*\*\*/g);
+                      return (
+                        <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani">
+                          {parts.map((part, i) => 
+                            i % 2 === 1 ? (
+                              <span key={i} className="text-primary font-bold">{part}</span>
+                            ) : (
+                              part
+                            )
+                          )}
+                        </p>
+                      );
+                    }
+                    // Linha vazia
+                    if (line.trim() === '') {
+                      return <div key={idx} className="h-2" />;
+                    }
+                    // Linha normal
+                    return (
+                      <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="flex-1">{line}</span>
+                      </p>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
