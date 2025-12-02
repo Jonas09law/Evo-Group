@@ -64,7 +64,7 @@ export default function NewsUpdatesSection() {
               NOTÍCIAS & ATUALIZAÇÕES
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto font-rajdhani">
-              Confira o que está acontecendo no Metroverso
+              Confira o que está acontecendo nas cidades da EVO GROUP
             </p>
           </div>
 
@@ -272,4 +272,5 @@ export default function NewsUpdatesSection() {
   );
 
 }
+
 
