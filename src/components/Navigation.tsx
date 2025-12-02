@@ -20,7 +20,6 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
-          {/* LOGO EM IMAGEM */}
           <div className="flex items-center">
             <img
               src={EvoLogo}
@@ -29,7 +28,6 @@ export const Navigation = () => {
             />
           </div>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection("inicio")}
@@ -56,6 +54,12 @@ export const Navigation = () => {
               COMO JOGAR
             </button>
             <button
+  onClick={() => scrollToSection("noticias")}
+  className="text-sm text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+>
+  NOTÍCIAS
+</button>
+            <button
               onClick={() => scrollToSection("contato")}
               className="text-sm text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
             >
@@ -63,7 +67,6 @@ export const Navigation = () => {
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="icon"
@@ -74,41 +77,47 @@ export const Navigation = () => {
           </Button>
         </div>
 
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden py-4 space-y-4 border-t border-border/50">
-            <button
-              onClick={() => scrollToSection("inicio")}
-              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
-            >
-              INÍCIO
-            </button>
-            <button
-              onClick={() => scrollToSection("servidores")}
-              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
-            >
-              CIDADES
-            </button>
-            <button
-              onClick={() => scrollToSection("ranking")}
-              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
-            >
-              RANKING
-            </button>
-            <button
-              onClick={() => scrollToSection("como-jogar")}
-              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
-            >
-              COMO JOGAR
-            </button>
-            <button
-              onClick={() => scrollToSection("contato")}
-              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
-            >
-              CONTATO
-            </button>
-          </div>
-        )}
+{/* Mobile Menu */}
+{isOpen && (
+  <div className="md:hidden py-4 space-y-4 border-t border-border/50">
+    <button
+      onClick={() => scrollToSection("inicio")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      INÍCIO
+    </button>
+    <button
+      onClick={() => scrollToSection("servidores")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      CIDADES
+    </button>
+    <button
+      onClick={() => scrollToSection("ranking")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      RANKING
+    </button>
+    <button
+      onClick={() => scrollToSection("como-jogar")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      COMO JOGAR
+    </button>
+    <button
+      onClick={() => scrollToSection("noticias")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      NOTÍCIAS
+    </button>
+    <button
+      onClick={() => scrollToSection("contato")}
+      className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+    >
+      CONTATO
+    </button>
+  </div>
+)}
       </div>
     </nav>
   );
