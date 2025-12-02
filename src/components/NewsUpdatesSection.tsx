@@ -5,16 +5,23 @@ import { useState } from "react";
 const updates = [
 
   {
-  date: "03.12.25",
-  title: "UPDATE 2.03",
-  image: "url-da-imagem",
+  date: "28/11/2025",
+  title: "UPDATE 2.02",
+  image: "https://media.discordapp.net/attachments/1441545324597608659/1443030621185114223/ATUALIZACAO.png?ex=6930283e&is=692ed6be&hm=809b89ea239ef823d6cdc4cd480ca07958d345556f134612760629d8f4aa8c61&=&format=webp&quality=lossless&width=1006&height=1006",
   category: "PATCH NOTES",
   contentText: `
-Sistema de pintar carro
-Arrumado atm
-Adicionado facs de ruas
-DataStore do ***INVENTARIO*** voltou antiga
-Adicionado BMW M4`,
+Alterado logo do fluxos no jogo
+Arrumado erro no gtr r34
+Arrumado 1.2 MIL erros de um som
+Refeito totalmente sistema de footsteps (reduzido lag)
+Arrumado radio
+Alterado logo do fluxos no menu do jogo
+Adicionado npc para fazer tutoriais na praça (em breve novas opções)
+Alteracoes no menu do jogo
+Adicionado BMW M4
+Reestocado dourada no site do jogo
+Arrumado alguns scripts
+Adicionado tutorial de como resgatar keys`,
 },
 
 {/*  {
@@ -297,4 +304,5 @@ export default function NewsUpdatesSection() {
       )}
     </>
   );
+
 }
