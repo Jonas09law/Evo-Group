@@ -24,40 +24,6 @@ Arrumado alguns scripts
 Adicionado tutorial de como resgatar keys`,
 },
 
-{/*  {
-    date: "26.11.25",
-    title: "Notas de Atualização — 2025.11.26",
-    image: "",
-    category: "PATCH NOTES",
-    content: {
-      sections: [
-        {
-          title: "Cupons",
-          emoji: "🎫",
-          items: [
-            { icon: "🎁", text: 'Cupom de primeira compra: "primeiracompra" — 20% de desconto' },
-            { icon: "🎁", text: 'Cupom Black Friday: "black26" — 25% de desconto' },
-          ],
-        },
-        {
-          title: "Economia",
-          emoji: "⚙️",
-          items: [
-            { 
-              icon: "✅", 
-              text: "Valor inicial para novos jogadores reajustado para R$60.000",
-              details: "Jogadores que criaram a conta nos últimos 30 dias e possuíam menos de 100.000 ganharam o bônus de 60.00 no banco nessa atualização."
-            },
-            { 
-              icon: "✅", 
-              text: "Adicionados bônus semanais para:",
-              details: "Empregos legais\nEmpregos ilegais"
-            },
-          ],
-        },
-      ],
-    },
-  },*/}
 ];
 
 export default function NewsUpdatesSection() {
@@ -73,7 +39,7 @@ export default function NewsUpdatesSection() {
   };
 
   const getVisibleCards = () => {
-    // Se tiver menos de 3 updates, mostra só os que existem sem duplicar
+
     const visibleCount = Math.min(3, updates.length);
     const cards = [];
     
@@ -306,3 +272,4 @@ export default function NewsUpdatesSection() {
   );
 
 }
+
