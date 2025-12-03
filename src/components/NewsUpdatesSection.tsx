@@ -6,7 +6,7 @@ const updates = [
   {
   date: "28/11/2025",
   title: "UPDATE 2.02",
-  image: "https://media.discordapp.net/attachments/1441545324597608659/1443030621185114223/ATUALIZACAO.png?ex=6930283e&is=692ed6be&hm=809b89ea239ef823d6cdc4cd480ca07958d345556f134612760629d8f4aa8c61&=&format=webp&quality=lossless&width=1006&height=1006",
+  image: "https://media.discordapp.net/attachments/1441545324597608659/1441567267782656120/Gemini_Generated_Image_lm6s75lm6s75lm6s-Photoroom.png?ex=69316ce3&is=69301b63&hm=d5e96132204a09c216203fb368f6f24d451a3fc9866911f0d8050584e184a47a&=&format=webp&quality=lossless&width=1006&height=1006",
   category: "PATCH NOTES",
   contentText: `
 Alterado logo do fluxos no jogo
@@ -363,6 +363,7 @@ export default function NewsUpdatesSection() {
   );
 
 }
+
 
 
 
