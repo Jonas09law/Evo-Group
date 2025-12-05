@@ -1,74 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
   {
-    id: 1,
-    date: "05/12/2025",
-    title: "UPDATE 2.03",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `
-Sistema de pintar carro **(AINDA EM DESENVOLVIMENTO)**
-Arrumado atm
-Adicionado facs de ruas
-⁠Novas roupas, incluindo novos modelos e correções de algumas roupas
-Sistema de cassino
-Arrumado chuva
-⁠Ativado o desmanche de veículos
-Nova UI prefeitura
-Adicionado marcadores para identificar cada lugar 
-Agora é possível partir vidros 
-Arrumado varios erros de sons
-Adicionado TrenoNatal
-Arrumado emprego de caminhoneiro
-Adicionado carros de amostra na concessionaria
-Arrumado erro do caminhoneiro no console
-Alterações no menu do jogo
-Arrumado porta da imobiliaria
-Trocado lugar de pegar ROTA
-Arrumado gui da rota para mobile
-DataStore do *INVENTARIO* voltou antiga (Todos os dados salvos pos WIPE perdidos)
-Adicionado garagem na Turquia (Dono comprou)
-Adicionado farda na Turquia (Dono comprou)
-Refeito o sistema de roubo do banco
-Arena de pvp
-Alguns comandos do admin foram restringidos
-Corrigido comandos que dão erro no admin
-Algumas texturas arrumadas
-Melhorado sistema de amarrar 
-Arrumado o amarrar via discord
-Arrumado alguns erros de animação
-Arrumado TabletPrisional
-Novo model BMW M4
-Arrumado BMW M4
-Adicionado FordFusion
-Adicionado DodgeDemon
-Adicionado Kombi
-Adicionado LamboEgoista
-Agora ao roubar um carro a policia sera chamada
-Arrumado AK47
-Arrumado todas as armas
-Agora quando atira nos carros eles quebram aos poucos
-Agora a data de gasolina e vida salvam
-Arrumado Glock S
-Arrumada IA2 S
-Agora quando o carro quebra tomando tiro sai fogo tambem
-Removido grande lag do jogo
-Refeito gui das gamepasses
-Alterado preco em robux das gamepasses
-Agora ao mudar de time muda para as roupas dele`,
-  },
-  {
-    id: 2,
-    date: "28/11/2025",
-    title: "UPDATE 2.02",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `
+  date: "28/11/2025",
+  title: "UPDATE 2.02",
+  image: atualizacao,
+  category: "PATCH NOTES",
+  contentText: `
 Alterado logo do fluxos no jogo
 Arrumado erro no gtr r34
 Arrumado 1.2 MIL erros de um som
@@ -81,14 +23,14 @@ Adicionado BMW M4
 Reestocado dourada no site do jogo
 Arrumado alguns scripts
 Adicionado tutorial de como resgatar keys`,
-  },
+},
+
   {
-    id: 3,
-    date: "21/11/2025",
-    title: "UPDATE 2.01",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `
+  date: "21/11/2025",
+  title: "UPDATE 2.01",
+  image: atualizacao,
+  category: "PATCH NOTES",
+  contentText: `
 Arrumado armário da CHOQUE
 Arrumado carro da CHOQUE
 Colocado farda da CHOQUE (Temporaria)
@@ -108,14 +50,14 @@ Arrumado erro ao fabricar a Hi Power
 Adicionado Turquia
 Agora da para comprar tratamentos na farmácia
 Mais lixos espalhados pela cidade`,
-  },
-  {
-    id: 4,
-    date: "20/11/2025",
-    title: "MEGA UPDATE",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `
+},
+
+    {
+  date: "20/11/2025",
+  title: "MEGA UPDATE",
+  image: atualizacao,
+  category: "PATCH NOTES",
+  contentText: `
 Mapa totalmente refeito
 Agora mostra o nick da pessoa quando ela quita do jogo
 Arrumado garagem nao abrir
@@ -173,7 +115,65 @@ Arrumado chave
 Arrumado farda PRF
 Arrumado PC
 Otimização no jogo`,
-  },
+},
+
+    {
+  date: "05/12/2025",
+  title: "UPDATE 2.03",
+  image: atualizacao,
+  category: "PATCH NOTES",
+  contentText: `
+Sistema de pintar carro *(AINDA EM DESENVOLVIMENTO)*
+Arrumado atm
+Adicionado facs de ruas
+⁠Novas roupas, incluindo novos modelos e correções de algumas roupas
+Sistema de cassino
+Arrumado chuva
+⁠Ativado o desmanche de veículos
+Nova UI prefeitura
+Adicionado marcadores para identificar cada lugar 
+Agora é possível partir vidros 
+Arrumado varios erros de sons
+Adicionado TrenoNatal
+Arrumado emprego de caminhoneiro
+Adicionado carros de amostra na concessionaria
+Arrumado erro do caminhoneiro no console
+Alterações no menu do jogo
+Arrumado porta da imobiliaria
+Trocado lugar de pegar ROTA
+Arrumado gui da rota para mobile
+DataStore do *INVENTARIO* voltou antiga (Todos os dados salvos pos WIPE perdidos)
+Adicionado garagem na Turquia (Dono comprou)
+Adicionado farda na Turquia (Dono comprou)
+Refeito o sistema de roubo do banco
+Arena de pvp
+Alguns comandos do admin foram restringidos
+Corrigido comandos que dão erro no admin
+Algumas texturas arrumadas
+Melhorado sistema de amarrar 
+Arrumado o amarrar via discord
+Arrumado alguns erros de animação
+Arrumado TabletPrisional
+Novo model BMW M4
+Arrumado BMW M4
+Adicionado FordFusion
+Adicionado DodgeDemon
+Adicionado Kombi
+Adicionado LamboEgoista
+Agora ao roubar um carro a policia sera chamada
+Arrumado AK47
+Arrumado todas as armas
+Agora quando atira nos carros eles quebram aos poucos
+Agora a data de gasolina e vida salvam
+Arrumado Glock S
+Arrumada IA2 S
+Agora quando o carro quebra tomando tiro sai fogo tambem
+Removido grande lag do jogo
+Refeito gui das gamepasses
+Alterado preco em robux das gamepasses
+Agora ao mudar de time muda para as roupas dele`,
+},
+  
 ];
 
 export default function NewsUpdatesSection() {
@@ -188,27 +188,27 @@ export default function NewsUpdatesSection() {
     setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
   };
 
-  // Calcula os cards visíveis usando useMemo
-  const visibleCards = useMemo(() => {
-    if (updates.length <= 3) {
-      return updates;
-    }
-    
+  const getVisibleCards = () => {
+
+    const visibleCount = Math.min(3, updates.length);
     const cards = [];
-    for (let i = 0; i < 3; i++) {
-      const idx = (currentIndex + i) % updates.length;
-      cards.push(updates[idx]);
+    
+    for (let i = 0; i < visibleCount; i++) {
+      const index = (currentIndex + i) % updates.length;
+      cards.push({ ...updates[index], uniqueKey: `${index}-${i}` });
     }
     return cards;
-  }, [currentIndex]);
+  };
 
   return (
     <>
       <section id="noticias" className="py-24 bg-gradient-hero relative overflow-hidden">
+        {/* Decorative Elements */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
         <div className="container mx-auto px-4 relative z-10">
+          {/* Header */}
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-5xl md:text-6xl font-bold text-gradient font-rajdhani mb-4 uppercase tracking-wider">
               NOTÍCIAS & ATUALIZAÇÕES
@@ -218,7 +218,9 @@ export default function NewsUpdatesSection() {
             </p>
           </div>
 
+          {/* Carousel */}
           <div className="relative max-w-7xl mx-auto">
+            {/* Navigation Buttons - Só mostra se tiver mais de 3 updates */}
             {updates.length > 3 && (
               <>
                 <button
@@ -239,13 +241,16 @@ export default function NewsUpdatesSection() {
               </>
             )}
 
+            {/* Cards Container */}
             <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
-              {visibleCards.map((update) => (
+              {getVisibleCards().map((update, idx) => (
                 <Card
-                  key={update.id}
+                  key={update.uniqueKey}
                   onClick={() => setSelectedUpdate(update)}
-                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary"
+                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
+                  style={{ animationDelay: `${idx * 150}ms` }}
                 >
+                  {/* Image Container */}
                   <div className="relative h-56 overflow-hidden">
                     <img
                       src={update.image}
@@ -254,10 +259,12 @@ export default function NewsUpdatesSection() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     
+                    {/* Date Badge */}
                     <div className="absolute top-4 left-4 px-3 py-1 bg-background/60 border border-primary rounded-md">
                       <span className="text-primary text-sm font-bold font-rajdhani">{update.date}</span>
                     </div>
 
+                    {/* Category Badge */}
                     <div className="absolute bottom-4 left-4">
                       <div className="px-4 py-2 bg-background/80 border-b-2 border-primary rounded">
                         <span className="text-primary font-bold text-sm tracking-wider font-rajdhani">
@@ -267,6 +274,7 @@ export default function NewsUpdatesSection() {
                     </div>
                   </div>
 
+                  {/* Content */}
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gradient group-hover:text-primary transition-colors font-rajdhani">
                       {update.title}
@@ -276,6 +284,7 @@ export default function NewsUpdatesSection() {
               ))}
             </div>
 
+            {/* Dots Indicator - Só mostra se tiver mais de 3 updates */}
             {updates.length > 3 && (
               <div className="flex justify-center gap-2 mt-8">
                 {updates.map((_, idx) => (
@@ -296,9 +305,11 @@ export default function NewsUpdatesSection() {
         </div>
       </section>
 
+      {/* Modal de Detalhes */}
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            {/* Close Button */}
             <button
               onClick={() => setSelectedUpdate(null)}
               className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10"
@@ -306,6 +317,7 @@ export default function NewsUpdatesSection() {
               <X className="w-6 h-6 text-foreground" />
             </button>
 
+            {/* Header com Imagem */}
             <div className="relative h-64 overflow-hidden rounded-t-lg">
               <img
                 src={selectedUpdate.image}
@@ -331,7 +343,9 @@ export default function NewsUpdatesSection() {
               </div>
             </div>
 
+            {/* Content */}
             <div className="p-8 space-y-8">
+              {/* Formato com Seções Customizadas */}
               {selectedUpdate.content?.sections && selectedUpdate.content.sections.map((section, sectionIdx) => (
                 <div key={sectionIdx}>
                   <h3 className="text-2xl font-bold text-primary font-rajdhani mb-4 flex items-center gap-2">
@@ -359,9 +373,11 @@ export default function NewsUpdatesSection() {
                 </div>
               ))}
 
+              {/* Formato Simples com Texto */}
               {selectedUpdate.contentText && (
                 <div className="space-y-4">
                   {selectedUpdate.contentText.split('\n').map((line, idx) => {
+                    // Título com **
                     if (line.startsWith('**') && line.endsWith('**')) {
                       return (
                         <h3 key={idx} className="text-xl font-bold text-primary font-rajdhani mt-6 mb-2">
@@ -369,6 +385,7 @@ export default function NewsUpdatesSection() {
                         </h3>
                       );
                     }
+                    // Texto com ***
                     if (line.includes('***')) {
                       const parts = line.split(/\*\*\*(.*?)\*\*\*/g);
                       return (
@@ -383,9 +400,11 @@ export default function NewsUpdatesSection() {
                         </p>
                       );
                     }
+                    // Linha vazia
                     if (line.trim() === '') {
                       return <div key={idx} className="h-2" />;
                     }
+                    // Linha normal
                     return (
                       <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
                         <span className="text-primary mt-1">•</span>
@@ -401,4 +420,5 @@ export default function NewsUpdatesSection() {
       )}
     </>
   );
+
 }
