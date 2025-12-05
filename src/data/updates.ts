@@ -1,5 +1,6 @@
 export const updates = [
   {
+    slug: "update-2-02",
     date: "28/11/2025",
     title: "UPDATE 2.02",
     image: "https://media.discordapp.net/attachments/1441545324597608659/1446527913720676464/ATUALIZACAO.png?format=webp",
@@ -109,3 +110,4 @@ Arrumado PC
 Otimização no jogo`
   }
 ];
+
