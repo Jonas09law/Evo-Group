@@ -189,13 +189,13 @@ export default function NewsUpdatesSection() {
     setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
   };
 
-const getVisibleCards = () => {
+  const getVisibleCards = () => {
     const visibleCount = Math.min(3, updates.length);
     const cards = [];
     
     for (let i = 0; i < visibleCount; i++) {
       const index = (currentIndex + i) % updates.length;
-      cards.push({ ...updates[index], uniqueKey: `${currentIndex}-${i}` });
+      cards.push(updates[index]);
     }
     return cards;
   };
@@ -422,6 +422,7 @@ const getVisibleCards = () => {
   );
 
 }
+
 
 
 
