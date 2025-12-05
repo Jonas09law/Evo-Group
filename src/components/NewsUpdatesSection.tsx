@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
@@ -12,7 +12,7 @@ const updates = [
     image: atualizacao,
     category: "PATCH NOTES",
     contentText: `
-Sistema de pintar carro ***(AINDA EM DESENVOLVIMENTO)***
+Sistema de pintar carro **(AINDA EM DESENVOLVIMENTO)**
 Arrumado atm
 Adicionado facs de ruas
 ⁠Novas roupas, incluindo novos modelos e correções de algumas roupas
@@ -188,29 +188,27 @@ export default function NewsUpdatesSection() {
     setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
   };
 
-  const getVisibleCards = () => {
-    const visibleCount = Math.min(3, updates.length);
-    const result = [];
-    
-    for (let i = 0; i < visibleCount; i++) {
-      const idx = (currentIndex + i) % updates.length;
-      result.push(updates[idx]);
+  // Calcula os cards visíveis usando useMemo
+  const visibleCards = useMemo(() => {
+    if (updates.length <= 3) {
+      return updates;
     }
     
-    return result;
-  };
-
-  const visibleCards = getVisibleCards();
+    const cards = [];
+    for (let i = 0; i < 3; i++) {
+      const idx = (currentIndex + i) % updates.length;
+      cards.push(updates[idx]);
+    }
+    return cards;
+  }, [currentIndex]);
 
   return (
     <>
       <section id="noticias" className="py-24 bg-gradient-hero relative overflow-hidden">
-        {/* Decorative Elements */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
         <div className="container mx-auto px-4 relative z-10">
-          {/* Header */}
           <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-5xl md:text-6xl font-bold text-gradient font-rajdhani mb-4 uppercase tracking-wider">
               NOTÍCIAS & ATUALIZAÇÕES
@@ -220,9 +218,7 @@ export default function NewsUpdatesSection() {
             </p>
           </div>
 
-          {/* Carousel */}
           <div className="relative max-w-7xl mx-auto">
-            {/* Navigation Buttons */}
             {updates.length > 3 && (
               <>
                 <button
@@ -243,16 +239,13 @@ export default function NewsUpdatesSection() {
               </>
             )}
 
-            {/* Cards Container */}
             <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
-              {visibleCards.map((update, idx) => (
+              {visibleCards.map((update) => (
                 <Card
-                  key={`card-${update.id}`}
+                  key={update.id}
                   onClick={() => setSelectedUpdate(update)}
-                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
-                  style={{ animationDelay: `${idx * 150}ms` }}
+                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary"
                 >
-                  {/* Image Container */}
                   <div className="relative h-56 overflow-hidden">
                     <img
                       src={update.image}
@@ -261,12 +254,10 @@ export default function NewsUpdatesSection() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     
-                    {/* Date Badge */}
                     <div className="absolute top-4 left-4 px-3 py-1 bg-background/60 border border-primary rounded-md">
                       <span className="text-primary text-sm font-bold font-rajdhani">{update.date}</span>
                     </div>
 
-                    {/* Category Badge */}
                     <div className="absolute bottom-4 left-4">
                       <div className="px-4 py-2 bg-background/80 border-b-2 border-primary rounded">
                         <span className="text-primary font-bold text-sm tracking-wider font-rajdhani">
@@ -276,7 +267,6 @@ export default function NewsUpdatesSection() {
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gradient group-hover:text-primary transition-colors font-rajdhani">
                       {update.title}
@@ -286,12 +276,11 @@ export default function NewsUpdatesSection() {
               ))}
             </div>
 
-            {/* Dots Indicator */}
             {updates.length > 3 && (
               <div className="flex justify-center gap-2 mt-8">
                 {updates.map((_, idx) => (
                   <button
-                    key={`dot-${idx}`}
+                    key={idx}
                     onClick={() => setCurrentIndex(idx)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       idx === currentIndex
@@ -307,11 +296,9 @@ export default function NewsUpdatesSection() {
         </div>
       </section>
 
-      {/* Modal de Detalhes */}
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-            {/* Close Button */}
             <button
               onClick={() => setSelectedUpdate(null)}
               className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10"
@@ -319,7 +306,6 @@ export default function NewsUpdatesSection() {
               <X className="w-6 h-6 text-foreground" />
             </button>
 
-            {/* Header com Imagem */}
             <div className="relative h-64 overflow-hidden rounded-t-lg">
               <img
                 src={selectedUpdate.image}
@@ -345,9 +331,7 @@ export default function NewsUpdatesSection() {
               </div>
             </div>
 
-            {/* Content */}
             <div className="p-8 space-y-8">
-              {/* Formato com Seções Customizadas */}
               {selectedUpdate.content?.sections && selectedUpdate.content.sections.map((section, sectionIdx) => (
                 <div key={sectionIdx}>
                   <h3 className="text-2xl font-bold text-primary font-rajdhani mb-4 flex items-center gap-2">
@@ -375,11 +359,9 @@ export default function NewsUpdatesSection() {
                 </div>
               ))}
 
-              {/* Formato Simples com Texto */}
               {selectedUpdate.contentText && (
                 <div className="space-y-4">
                   {selectedUpdate.contentText.split('\n').map((line, idx) => {
-                    // Título com **
                     if (line.startsWith('**') && line.endsWith('**')) {
                       return (
                         <h3 key={idx} className="text-xl font-bold text-primary font-rajdhani mt-6 mb-2">
@@ -387,7 +369,6 @@ export default function NewsUpdatesSection() {
                         </h3>
                       );
                     }
-                    // Texto com ***
                     if (line.includes('***')) {
                       const parts = line.split(/\*\*\*(.*?)\*\*\*/g);
                       return (
@@ -402,11 +383,9 @@ export default function NewsUpdatesSection() {
                         </p>
                       );
                     }
-                    // Linha vazia
                     if (line.trim() === '') {
                       return <div key={idx} className="h-2" />;
                     }
-                    // Linha normal
                     return (
                       <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
                         <span className="text-primary mt-1">•</span>
@@ -423,5 +402,3 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
-
-
