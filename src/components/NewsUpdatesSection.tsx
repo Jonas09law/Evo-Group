@@ -12,7 +12,7 @@ const updates = [
     image: atualizacao,
     category: "PATCH NOTES",
     contentText: `
-Sistema de pintar carro **(AINDA EM DESENVOLVIMENTO)**
+Sistema de pintar carro ***(AINDA EM DESENVOLVIMENTO)***
 Arrumado atm
 Adicionado facs de ruas
 ⁠Novas roupas, incluindo novos modelos e correções de algumas roupas
@@ -423,4 +423,5 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
