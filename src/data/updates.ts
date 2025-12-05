@@ -17,9 +17,10 @@ Alteracoes no menu do jogo
 Adicionado BMW M4
 Reestocado dourada no site do jogo
 Arrumado alguns scripts
-Adicionado tutorial de como resgatar keys`
+Adicionado tutorial de como resgatar keys`,
   },
   {
+    slug: "update-2-01",
     date: "21/11/2025",
     title: "UPDATE 2.01",
     image: "https://media.discordapp.net/attachments/1441545324597608659/1446527913720676464/ATUALIZACAO.png?format=webp",
@@ -43,9 +44,10 @@ Arrumado fazenda
 Arrumado erro ao fabricar a Hi Power 
 Adicionado Turquia
 Agora da para comprar tratamentos na farmácia
-Mais lixos espalhados pela cidade`
+Mais lixos espalhados pela cidade`,
   },
   {
+    slug: "mega-update",
     date: "20/11/2025",
     title: "MEGA UPDATE",
     image: "https://media.discordapp.net/attachments/1441545324597608659/1446527913720676464/ATUALIZACAO.png?format=webp",
@@ -107,7 +109,6 @@ Arrumado mercado
 Arrumado chave
 Arrumado farda PRF
 Arrumado PC
-Otimização no jogo`
-  }
+Otimização no jogo`,
+  },
 ];
-
