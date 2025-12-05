@@ -176,24 +176,28 @@ export default function NewsUpdatesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedUpdate, setSelectedUpdate] = useState<typeof updates[0] | null>(null);
 
+  const cardsPerView = 3; // número máximo de cards visíveis
+
   const nextSlide = () => {
-    if (currentIndex < updates.length - 3) setCurrentIndex(currentIndex + 1);
+    // não ultrapassar o último índice que permite um slide completo
+    if (currentIndex < updates.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
   const prevSlide = () => {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
-  const getVisibleCards = () => updates.slice(currentIndex, currentIndex + 3);
+  // pega apenas os updates visíveis no slide atual
+  const getVisibleCards = () => updates.slice(currentIndex, currentIndex + cardsPerView);
+
+  // calcula quantos slides existem de verdade
+  const totalSlides = updates.length;
 
   return (
     <>
       <section id="noticias" className="py-24 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold text-gradient font-rajdhani mb-4 uppercase tracking-wider">
               NOTÍCIAS & ATUALIZAÇÕES
             </h2>
@@ -202,19 +206,20 @@ export default function NewsUpdatesSection() {
             </p>
           </div>
 
-          {/* Carousel */}
           <div className="relative max-w-7xl mx-auto">
-            {updates.length > 3 && (
+            {updates.length > 1 && (
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                  disabled={currentIndex === 0}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary disabled:opacity-50"
                 >
                   <ChevronLeft className="w-6 h-6 text-primary" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                  disabled={currentIndex >= totalSlides - 1}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary disabled:opacity-50"
                 >
                   <ChevronRight className="w-6 h-6 text-primary" />
                 </button>
@@ -251,19 +256,18 @@ export default function NewsUpdatesSection() {
               ))}
             </div>
 
-            {updates.length > 3 && (
-              <div className="flex justify-center gap-2 mt-8">
-                {updates.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
+            {/* indicators corretos */}
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: totalSlides }).map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
