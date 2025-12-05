@@ -5,13 +5,13 @@ import { useState } from "react";
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
-
   {
-  date: "05/12/2025",
-  title: "UPDATE 2.03",
-  image: atualizacao,
-  category: "PATCH NOTES",
-  contentText: `
+    id: 1,
+    date: "05/12/2025",
+    title: "UPDATE 2.03",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
 Sistema de pintar carro *(AINDA EM DESENVOLVIMENTO)*
 Arrumado atm
 Adicionado facs de ruas
@@ -61,14 +61,14 @@ Removido grande lag do jogo
 Refeito gui das gamepasses
 Alterado preco em robux das gamepasses
 Agora ao mudar de time muda para as roupas dele`,
-},
-  
+  },
   {
-  date: "28/11/2025",
-  title: "UPDATE 2.02",
-  image: atualizacao,
-  category: "PATCH NOTES",
-  contentText: `
+    id: 2,
+    date: "28/11/2025",
+    title: "UPDATE 2.02",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
 Alterado logo do fluxos no jogo
 Arrumado erro no gtr r34
 Arrumado 1.2 MIL erros de um som
@@ -81,14 +81,14 @@ Adicionado BMW M4
 Reestocado dourada no site do jogo
 Arrumado alguns scripts
 Adicionado tutorial de como resgatar keys`,
-},
-
+  },
   {
-  date: "21/11/2025",
-  title: "UPDATE 2.01",
-  image: atualizacao,
-  category: "PATCH NOTES",
-  contentText: `
+    id: 3,
+    date: "21/11/2025",
+    title: "UPDATE 2.01",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
 Arrumado armário da CHOQUE
 Arrumado carro da CHOQUE
 Colocado farda da CHOQUE (Temporaria)
@@ -108,14 +108,14 @@ Arrumado erro ao fabricar a Hi Power
 Adicionado Turquia
 Agora da para comprar tratamentos na farmácia
 Mais lixos espalhados pela cidade`,
-},
-
-    {
-  date: "20/11/2025",
-  title: "MEGA UPDATE",
-  image: atualizacao,
-  category: "PATCH NOTES",
-  contentText: `
+  },
+  {
+    id: 4,
+    date: "20/11/2025",
+    title: "MEGA UPDATE",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
 Mapa totalmente refeito
 Agora mostra o nick da pessoa quando ela quita do jogo
 Arrumado garagem nao abrir
@@ -173,8 +173,7 @@ Arrumado chave
 Arrumado farda PRF
 Arrumado PC
 Otimização no jogo`,
-},
-  
+  },
 ];
 
 export default function NewsUpdatesSection() {
@@ -191,14 +190,17 @@ export default function NewsUpdatesSection() {
 
   const getVisibleCards = () => {
     const visibleCount = Math.min(3, updates.length);
-    const cards = [];
+    const result = [];
     
     for (let i = 0; i < visibleCount; i++) {
-      const index = (currentIndex + i) % updates.length;
-      cards.push(updates[index]);
+      const idx = (currentIndex + i) % updates.length;
+      result.push(updates[idx]);
     }
-    return cards;
+    
+    return result;
   };
+
+  const visibleCards = getVisibleCards();
 
   return (
     <>
@@ -220,7 +222,7 @@ export default function NewsUpdatesSection() {
 
           {/* Carousel */}
           <div className="relative max-w-7xl mx-auto">
-            {/* Navigation Buttons - Só mostra se tiver mais de 3 updates */}
+            {/* Navigation Buttons */}
             {updates.length > 3 && (
               <>
                 <button
@@ -243,9 +245,9 @@ export default function NewsUpdatesSection() {
 
             {/* Cards Container */}
             <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
-              {getVisibleCards().map((update, idx) => (
+              {visibleCards.map((update, idx) => (
                 <Card
-                  key={update.uniqueKey}
+                  key={`card-${update.id}`}
                   onClick={() => setSelectedUpdate(update)}
                   className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
                   style={{ animationDelay: `${idx * 150}ms` }}
@@ -284,12 +286,12 @@ export default function NewsUpdatesSection() {
               ))}
             </div>
 
-            {/* Dots Indicator - Só mostra se tiver mais de 3 updates */}
+            {/* Dots Indicator */}
             {updates.length > 3 && (
               <div className="flex justify-center gap-2 mt-8">
                 {updates.map((_, idx) => (
                   <button
-                    key={idx}
+                    key={`dot-${idx}`}
                     onClick={() => setCurrentIndex(idx)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       idx === currentIndex
@@ -420,17 +422,4 @@ export default function NewsUpdatesSection() {
       )}
     </>
   );
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
