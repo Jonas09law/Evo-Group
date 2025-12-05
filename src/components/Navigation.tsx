@@ -1,18 +1,60 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const { robloxId } = req.query;
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (!robloxId || typeof robloxId !== "string") {
+    return res.status(400).json({ error: "Parâmetro robloxId inválido" });
+  }
+
+  try {
+    const response = await fetch(`https://users.roblox.com/v1/users/${robloxId}`);
+    
+    if (!response.ok) {
+      return res.status(response.status).json({ error: "Usuário Roblox não encontrado" });
+    }
+
+    const data = await response.json();
+
+    const userData = {
+      id: data.id,
+      username: data.name,
+      displayName: data.displayName,
+      avatar: `https://www.roblox.com/headshot-thumbnail/image?userId=${data.id}&width=150&height=150&format=png`,
+      created: data.created,
+    };
+
+    return res.status(200).json(userData);
+  } catch (err) {
+    console.error("Erro ao buscar usuário Roblox:", err);
+    return res.status(500).json({ error: "Erro interno ao consultar Roblox" });
+  }
+}
+2️⃣ Navigation.tsx
+ts
+Copiar código
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import EvoLogo from "@/assets/AAAAAA.png";
 
-// CONFIGURAÇÕES DISCORD OAUTH
 const DISCORD_CLIENT_ID = "1399455643265536051";
 const DISCORD_REDIRECT_URI = window.location.origin + "/";
 const BLOXLINK_API_KEY = "ca1a7cff-bef9-4f86-b145-75e80c3d2e03";
-const DISCORD_SERVER_ID = "1201255095745130556"; // ID do servidor Discord
+const DISCORD_SERVER_ID = "1201255095745130556"; 
 
 interface UserData {
   id: string;
   username: string;
+  displayName?: string;
   avatar: string;
   discordId: string;
   discordUsername: string;
@@ -66,7 +108,7 @@ export const Navigation = () => {
     setError("");
 
     try {
-      // 1️⃣ Trocar code por access token
+
       const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -84,7 +126,6 @@ export const Navigation = () => {
       const tokenData = await tokenResponse.json();
       const accessToken = tokenData.access_token;
 
-      // 2️⃣ Buscar informações do Discord
       const userResponse = await fetch("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -96,11 +137,8 @@ export const Navigation = () => {
       const discordUsername = discordUser.username;
       const discordAvatar = discordUser.avatar
         ? `https://cdn.discordapp.com/avatars/${discordId}/${discordUser.avatar}.png`
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            discordUsername
-          )}&background=5865F2&color=fff&bold=true`;
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(discordUsername)}&background=5865F2&color=fff&bold=true`;
 
-      // 3️⃣ Buscar Roblox ID via Bloxlink (Guild API)
       const bloxlinkResponse = await fetch(
         `https://api.blox.link/v4/public/guilds/${DISCORD_SERVER_ID}/discord-to-roblox/${discordId}`,
         {
@@ -131,15 +169,16 @@ export const Navigation = () => {
         return;
       }
 
-      // 4️⃣ Buscar informações do Roblox via backend
       let robloxUsername = `User_${robloxId}`;
       let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
+      let robloxDisplayName = robloxUsername;
 
       try {
         const robloxUserResponse = await fetch(`/api/roblox/${robloxId}`);
         if (robloxUserResponse.ok) {
           const robloxUserData = await robloxUserResponse.json();
-          robloxUsername = robloxUserData.name || robloxUsername;
+          robloxUsername = robloxUserData.username || robloxUsername;
+          robloxDisplayName = robloxUserData.displayName || robloxUsername;
           robloxAvatar = robloxUserData.avatar || robloxAvatar;
         } else {
           console.warn("Falha ao buscar usuário Roblox no backend:", robloxUserResponse.status);
@@ -148,10 +187,10 @@ export const Navigation = () => {
         console.error("Erro ao buscar usuário Roblox via backend:", err);
       }
 
-      // Salvar usuário
       const userData: UserData = {
         id: robloxId,
         username: robloxUsername,
+        displayName: robloxDisplayName,
         avatar: robloxAvatar,
         discordId,
         discordUsername,
