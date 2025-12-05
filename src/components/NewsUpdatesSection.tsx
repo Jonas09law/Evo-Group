@@ -5,62 +5,6 @@ import { useState } from "react";
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
-    {
-    date: "05/12/2025",
-    title: "UPDATE 2.03",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `
-***Sistema de pintar carro (AINDA EM DESENVOLVIMENTO)***
-Arrumado atm
-Adicionado facs de ruas
-Novas roupas, incluindo novos modelos e correções de algumas roupas
-Sistema de cassino
-Arrumado chuva
-Ativado o desmanche de veículos
-Nova UI prefeitura
-Adicionado marcadores para identificar cada lugar
-Agora é possível partir vidros
-Arrumado varios erros de sons
-Adicionado TrenoNatal
-Arrumado emprego de caminhoneiro
-Adicionado carros de amostra na concessionaria
-Arrumado erro do caminhoneiro no console
-Alterações no menu do jogo
-Arrumado porta da imobiliaria
-Trocado lugar de pegar ROTA
-Arrumado gui da rota para mobile
-DataStore do *INVENTARIO* voltou antiga (Todos os dados salvos pos WIPE perdidos)
-Adicionado garagem na Turquia (Dono comprou)
-Adicionado farda na Turquia (Dono comprou)
-Refeito o sistema de roubo do banco
-Arena de pvp
-Alguns comandos do admin foram restringidos
-Corrigido comandos que dão erro no admin
-Algumas texturas arrumadas
-Melhorado sistema de amarrar
-Arrumado o amarrar via discord
-Arrumado alguns erros de animação
-Arrumado TabletPrisional
-Novo model BMW M4
-Arrumado BMW M4
-Adicionado FordFusion
-Adicionado DodgeDemon
-Adicionado Kombi
-Adicionado LamboEgoista
-Agora ao roubar um carro a policia sera chamada
-Arrumado AK47
-Arrumado todas as armas
-Agora quando atira nos carros eles quebram aos poucos
-Agora a data de gasolina e vida salvam
-Arrumado Glock S
-Arrumada IA2 S
-Agora quando o carro quebra tomando tiro sai fogo tambem
-Removido grande lag do jogo
-Refeito gui das gamepasses
-Alterado preco em robux das gamepasses
-Agora ao mudar de time muda para as roupas dele`,
-  },
   {
     date: "05/12/2025",
     title: "UPDATE 2.03",
@@ -373,4 +317,5 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
