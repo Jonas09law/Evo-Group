@@ -23,10 +23,11 @@ export default function NewsUpdatesSection() {
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
 
   const openUpdate = (update: typeof updates[0]) => {
-    navigate(`/updates/${update.slug}`);
+    setSelectedUpdate(update);
   };
 
   const closeUpdate = () => {
+    setSelectedUpdate(null);
     navigate("/");
   };
 
@@ -41,23 +42,29 @@ export default function NewsUpdatesSection() {
   const renderLine = (line: string, idx: number) => {
     if (line.trim() === "") return <div key={idx} className="h-2" />;
 
-    // Título destacado com **
+    // Negrito forte com ***
+    if (line.includes("***")) {
+      const parts = line.split(/\*\*\*(.*?)\*\*\*/g);
+      return (
+        <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
+          {parts.map((part, i) =>
+            i % 2 === 1 ? <span key={i} className="text-primary font-bold">{part}</span> : part
+          )}
+        </p>
+      );
+    }
+
+    // Título com **
     if (line.startsWith("**") && line.endsWith("**")) {
       return (
-        <h3
-          key={idx}
-          className="text-xl font-bold text-primary font-rajdhani mt-4 mb-2"
-        >
+        <h3 key={idx} className="text-xl font-bold text-primary font-rajdhani mt-4 mb-2">
           {line.replace(/\*\*/g, "")}
         </h3>
       );
     }
 
     return (
-      <p
-        key={idx}
-        className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2"
-      >
+      <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
         <span className="text-primary mt-1">•</span>
         <span className="flex-1">{line}</span>
       </p>
@@ -83,39 +90,20 @@ export default function NewsUpdatesSection() {
           <div className="relative max-w-7xl mx-auto">
             {updates.length > 3 && (
               <>
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
-                >
+                <button onClick={prevSlide} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
                   <ChevronLeft className="w-6 h-6 text-primary" />
                 </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
-                >
+                <button onClick={nextSlide} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
                   <ChevronRight className="w-6 h-6 text-primary" />
                 </button>
               </>
             )}
 
-            <div className={`grid gap-6 px-4 ${
-              updates.length === 1 ? "md:grid-cols-1 max-w-md mx-auto" :
-              updates.length === 2 ? "md:grid-cols-2 max-w-4xl mx-auto" :
-              "md:grid-cols-3"
-            }`}>
+            <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
               {getVisibleCards().map((update, idx) => (
-                <Card
-                  key={update.uniqueKey}
-                  onClick={() => openUpdate(update)}
-                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
-                  style={{ animationDelay: `${idx * 150}ms` }}
-                >
+                <Card key={update.uniqueKey} onClick={() => openUpdate(update)} className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${idx * 150}ms` }}>
                   <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={update.image}
-                      alt={update.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+                    <img src={update.image} alt={update.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     <div className="absolute top-4 left-4 px-3 py-1 bg-background/60 border border-primary rounded-md">
                       <span className="text-primary text-sm font-bold font-rajdhani">{update.date}</span>
@@ -136,13 +124,7 @@ export default function NewsUpdatesSection() {
             {updates.length > 3 && (
               <div className="flex justify-center gap-2 mt-8">
                 {updates.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"
-                    }`}
-                  />
+                  <button key={idx} onClick={() => setCurrentIndex(idx)} className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"}`} />
                 ))}
               </div>
             )}
@@ -154,26 +136,19 @@ export default function NewsUpdatesSection() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
             
-            {/* Botão de fechar X */}
-            <button onClick={closeUpdate} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
-              <X className="w-6 h-6 text-foreground" />
-            </button>
-
             {/* Botão Voltar */}
-            <button
-              onClick={closeUpdate}
-              className="absolute top-4 left-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10 flex items-center gap-1"
-            >
+            <button onClick={closeUpdate} className="absolute top-4 left-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10 flex items-center gap-1">
               <ArrowLeft className="w-5 h-5 text-foreground" />
               <span className="text-foreground font-bold text-sm">Voltar</span>
             </button>
 
+            {/* Botão fechar */}
+            <button onClick={closeUpdate} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
+              <X className="w-6 h-6 text-foreground" />
+            </button>
+
             <div className="relative h-64 overflow-hidden rounded-t-lg">
-              <img
-                src={selectedUpdate.image}
-                alt={selectedUpdate.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={selectedUpdate.image} alt={selectedUpdate.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex items-center gap-3 mb-3">
