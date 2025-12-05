@@ -9,7 +9,7 @@ export const updates = [
     image: atualizacao,
     category: "PATCH NOTES",
     contentText: `
-Alterado logo do fluxos no jogo
+**Alterado logo do fluxos no jogo**
 Arrumado erro no gtr r34
 Arrumado 1.2 MIL erros de um som
 Refeito totalmente sistema de footsteps (reduzido lag)
@@ -115,5 +115,6 @@ Arrumado PC
 Otimização no jogo`,
   },
 ];
+
 
 
