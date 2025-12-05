@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const response = await fetch(`https://users.roblox.com/v1/users/${robloxId}`);
-    
+
     if (!response.ok) {
       return res.status(response.status).json({ error: "Usuário Roblox não encontrado" });
     }
