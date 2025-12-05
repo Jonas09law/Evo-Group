@@ -184,33 +184,11 @@ const nextSlide = () => {
     setCurrentIndex(currentIndex + 1);
   }
 };
+
 const prevSlide = () => {
   if (currentIndex > 0) {
     setCurrentIndex(currentIndex - 1);
   }
-};
-
-const getVisibleCards = () => {
-  const visibleCount = Math.min(3, updates.length);
-
-  if (updates.length === 4 && visibleCount === 3) {
-    const start = currentIndex;
-    const end = Math.min(start + visibleCount, updates.length);
-    const sliced = updates.slice(start, end);
-
-    while (sliced.length < visibleCount) {
-      sliced.push(updates[sliced.length]);
-    }
-
-    return sliced.map((u, i) => ({ ...u, uniqueKey: `${start}-${i}` }));
-  }
-
-  const cards = [];
-  for (let i = 0; i < visibleCount; i++) {
-    const index = (currentIndex + i) % updates.length;
-    cards.push({ ...updates[index], uniqueKey: `${index}-${i}` });
-  }
-  return cards;
 };
 
   return (
@@ -435,6 +413,7 @@ const getVisibleCards = () => {
   );
 
 }
+
 
 
 
