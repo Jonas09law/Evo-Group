@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom"; // ✅ usar Link do react-router-dom
 
-const updates = [
+export const updates = [
   {
     date: "28/11/2025",
     title: "UPDATE 2.02",
@@ -73,8 +73,6 @@ Adicionado barulho ao ligar o carro
   },
 ];
 
-export { updates };
-
 export default function NewsUpdatesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -127,7 +125,7 @@ export default function NewsUpdatesSection() {
 
           <div className="grid gap-6 px-4 md:grid-cols-3">
             {getVisibleCards().map((update) => (
-              <Link key={update.uniqueKey} href={`/updates/${update.slug}`}>
+              <Link key={update.uniqueKey} to={`/updates/${update.slug}`}>
                 <Card className="cursor-pointer hover:border-primary transition-all">
                   <div className="relative h-56 overflow-hidden">
                     <img
@@ -150,4 +148,3 @@ export default function NewsUpdatesSection() {
     </section>
   );
 }
-
