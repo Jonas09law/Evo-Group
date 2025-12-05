@@ -1,14 +1,34 @@
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { updates } from "@/data/updates";
 
 export default function NewsUpdatesSection() {
+  const navigate = useNavigate();
+  const { slug } = useParams<{ slug?: string }>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedUpdate, setSelectedUpdate] = useState<typeof updates[0] | null>(null);
 
+  useEffect(() => {
+    if (slug) {
+      const found = updates.find(u => u.slug === slug);
+      if (found) setSelectedUpdate(found);
+    } else {
+      setSelectedUpdate(null);
+    }
+  }, [slug]);
+
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % updates.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
+
+  const openUpdate = (update: typeof updates[0]) => {
+    navigate(`/updates/${update.slug}`);
+  };
+
+  const closeUpdate = () => {
+    navigate("/");
+  };
 
   const getVisibleCards = () => {
     const visibleCount = Math.min(3, updates.length);
@@ -48,7 +68,7 @@ export default function NewsUpdatesSection() {
 
             <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
               {getVisibleCards().map((update, idx) => (
-                <Card key={update.uniqueKey} onClick={() => setSelectedUpdate(update)} className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${idx * 150}ms` }}>
+                <Card key={update.uniqueKey} onClick={() => openUpdate(update)} className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${idx * 150}ms` }}>
                   <div className="relative h-56 overflow-hidden">
                     <img src={update.image} alt={update.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -82,7 +102,7 @@ export default function NewsUpdatesSection() {
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-            <button onClick={() => setSelectedUpdate(null)} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
+            <button onClick={closeUpdate} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
               <X className="w-6 h-6 text-foreground" />
             </button>
 
