@@ -127,24 +127,23 @@ export const Navigation = () => {
         return;
       }
 
-      let robloxUsername = `User_${robloxId}`;
-      let robloxDisplayName = robloxUsername;
-      let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
+let robloxUsername = `User_${robloxId}`;
+let robloxDisplayName = robloxUsername;
+let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
 
-      try {
-        const robloxUserResponse = await fetch(`/api/roblox/${robloxId}`);
-        if (robloxUserResponse.ok) {
-          const robloxUserData = await robloxUserResponse.json();
-          robloxUsername = robloxUserData.username || robloxUsername;
-          robloxDisplayName =
-            robloxUserData.displayName || robloxUserData.username || robloxUsername;
-          robloxAvatar = robloxUserData.avatar || robloxAvatar;
-        } else {
-          console.warn("Falha ao buscar usuário Roblox no backend:", robloxUserResponse.status);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar usuário Roblox via backend:", err);
-      }
+try {
+  const robloxUserResponse = await fetch(`/api/roblox/${robloxId}`);
+  if (robloxUserResponse.ok) {
+    const robloxUserData = await robloxUserResponse.json();
+    robloxUsername = robloxUserData.username || robloxUsername;
+    robloxDisplayName = robloxUserData.displayName || robloxUserData.username || robloxUsername;
+    robloxAvatar = robloxUserData.avatar || robloxAvatar;
+  } else {
+    console.warn("Falha ao buscar usuário Roblox no backend:", robloxUserResponse.status);
+  }
+} catch (err) {
+  console.error("Erro ao buscar usuário Roblox via backend:", err);
+}
 
       const userData: UserData = {
         id: robloxId,
