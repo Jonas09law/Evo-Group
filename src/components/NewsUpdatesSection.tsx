@@ -59,7 +59,8 @@ Agora quando o carro quebra tomando tiro sai fogo tambem
 Removido grande lag do jogo
 Refeito gui das gamepasses
 Alterado preco em robux das gamepasses
-Agora ao mudar de time muda para as roupas dele`,
+Agora ao mudar de time muda para as roupas dele
+Arrumado bug da tela piscando`,
   },
   {
     date: "28/11/2025",
@@ -315,6 +316,7 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
 
 
