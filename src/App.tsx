@@ -17,8 +17,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/updates/:slug" element={<UpdatePage />} />
-          {/* Mantenha a rota catch-all por último */}
+          <Route path="/updates/:slug" element={<UpdatePage />} /> {/* ✅ rota dinâmica */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
