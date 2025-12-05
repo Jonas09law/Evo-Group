@@ -187,17 +187,28 @@ export default function NewsUpdatesSection() {
     setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
   };
 
-  const getVisibleCards = () => {
+const getVisibleCards = () => {
+  const visibleCount = Math.min(3, updates.length);
 
-    const visibleCount = Math.min(10, updates.length);
-    const cards = [];
-    
-    for (let i = 0; i < visibleCount; i++) {
-      const index = (currentIndex + i) % updates.length;
-      cards.push({ ...updates[index], uniqueKey: `${index}-${i}` });
+  if (updates.length === 4 && visibleCount === 3) {
+    const start = currentIndex;
+    const end = Math.min(start + visibleCount, updates.length);
+    const sliced = updates.slice(start, end);
+
+    while (sliced.length < visibleCount) {
+      sliced.push(updates[sliced.length]);
     }
-    return cards;
-  };
+
+    return sliced.map((u, i) => ({ ...u, uniqueKey: `${start}-${i}` }));
+  }
+
+  const cards = [];
+  for (let i = 0; i < visibleCount; i++) {
+    const index = (currentIndex + i) % updates.length;
+    cards.push({ ...updates[index], uniqueKey: `${index}-${i}` });
+  }
+  return cards;
+};
 
   return (
     <>
@@ -421,4 +432,5 @@ export default function NewsUpdatesSection() {
   );
 
 }
+
 
