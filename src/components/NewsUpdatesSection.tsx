@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const updates = [
@@ -150,3 +150,4 @@ export default function NewsUpdatesSection() {
     </section>
   );
 }
+
