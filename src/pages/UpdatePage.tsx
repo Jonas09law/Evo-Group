@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { updates } from "../components/NewsUpdatesSection";
+import { updates } from "../components/NewsUpdatesSection"; 
 
 export default function UpdatePage() {
   const { slug } = useParams();
