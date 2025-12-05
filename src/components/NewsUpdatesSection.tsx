@@ -40,6 +40,13 @@ const updates = [
     category: "PATCH NOTES",
     contentText: `Correções menores ...`,
   },
+    {
+    date: "18/11/2025",
+    title: "MINOR PATCH",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `Correções menores ...`,
+  },
 ];
 
 export default function NewsUpdatesSection() {
@@ -184,3 +191,4 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
