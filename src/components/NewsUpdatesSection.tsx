@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updates } from "@/data/updates";
@@ -153,8 +153,19 @@ export default function NewsUpdatesSection() {
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            
+            {/* Botão de fechar X */}
             <button onClick={closeUpdate} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
               <X className="w-6 h-6 text-foreground" />
+            </button>
+
+            {/* Botão Voltar */}
+            <button
+              onClick={closeUpdate}
+              className="absolute top-4 left-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10 flex items-center gap-1"
+            >
+              <ArrowLeft className="w-5 h-5 text-foreground" />
+              <span className="text-foreground font-bold text-sm">Voltar</span>
             </button>
 
             <div className="relative h-64 overflow-hidden rounded-t-lg">
