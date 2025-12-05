@@ -179,13 +179,16 @@ export default function NewsUpdatesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedUpdate, setSelectedUpdate] = useState(null);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % updates.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + updates.length) % updates.length);
-  };
+const nextSlide = () => {
+  if (currentIndex < updates.length - 3) {
+    setCurrentIndex(currentIndex + 1);
+  }
+};
+const prevSlide = () => {
+  if (currentIndex > 0) {
+    setCurrentIndex(currentIndex - 1);
+  }
+};
 
 const getVisibleCards = () => {
   const visibleCount = Math.min(3, updates.length);
@@ -432,5 +435,6 @@ const getVisibleCards = () => {
   );
 
 }
+
 
 
