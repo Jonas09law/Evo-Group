@@ -236,7 +236,7 @@ const prevSlide = () => {
             <div className={`grid gap-6 px-4 ${updates.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' : updates.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
               {getVisibleCards().map((update, idx) => (
                 <Card
-                  key={update.uniqueKey}
+                  key={update.date + update.title}
                   onClick={() => setSelectedUpdate(update)}
                   className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary animate-in fade-in slide-in-from-bottom-4"
                   style={{ animationDelay: `${idx * 150}ms` }}
@@ -413,6 +413,7 @@ const prevSlide = () => {
   );
 
 }
+
 
 
 
