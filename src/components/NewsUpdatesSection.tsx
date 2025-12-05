@@ -176,10 +176,9 @@ export default function NewsUpdatesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedUpdate, setSelectedUpdate] = useState<typeof updates[0] | null>(null);
 
-  const cardsPerView = 3; // número máximo de cards visíveis
+  const cardsPerView = 3;
 
   const nextSlide = () => {
-    // não ultrapassar o último índice que permite um slide completo
     if (currentIndex < updates.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
@@ -187,11 +186,8 @@ export default function NewsUpdatesSection() {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
-  // pega apenas os updates visíveis no slide atual
-  const getVisibleCards = () => updates.slice(currentIndex, currentIndex + cardsPerView);
-
-  // calcula quantos slides existem de verdade
-  const totalSlides = updates.length;
+  const getVisibleCards = () =>
+    updates.slice(currentIndex, Math.min(currentIndex + cardsPerView, updates.length));
 
   return (
     <>
@@ -218,7 +214,7 @@ export default function NewsUpdatesSection() {
                 </button>
                 <button
                   onClick={nextSlide}
-                  disabled={currentIndex >= totalSlides - 1}
+                  disabled={currentIndex >= updates.length - 1}
                   className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary disabled:opacity-50"
                 >
                   <ChevronRight className="w-6 h-6 text-primary" />
@@ -256,9 +252,8 @@ export default function NewsUpdatesSection() {
               ))}
             </div>
 
-            {/* indicators corretos */}
             <div className="flex justify-center gap-2 mt-8">
-              {Array.from({ length: totalSlides }).map((_, idx) => (
+              {Array.from({ length: updates.length }).map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
@@ -272,7 +267,6 @@ export default function NewsUpdatesSection() {
         </div>
       </section>
 
-      {/* Modal */}
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
