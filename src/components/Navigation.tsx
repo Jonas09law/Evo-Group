@@ -66,7 +66,6 @@ export const Navigation = () => {
     setError("");
 
     try {
-
       const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -245,12 +244,12 @@ export const Navigation = () => {
                       alt={user.username}
                       className="w-8 h-8 rounded-full border-2 border-green-400"
                       onError={(e) => {
-                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`;
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.username)}&background=00ff41&color=000&bold=true`;
                       }}
                     />
                     <div className="text-left">
                       <p className="text-xs font-bold text-white leading-tight flex items-center gap-1">
-                        {user.username}
+                        {user.displayName || user.username}
                         <span className="text-green-400" title="Verificado via Discord">✓</span>
                       </p>
                       <p className="text-[10px] text-gray-400">
@@ -341,12 +340,12 @@ export const Navigation = () => {
                       alt={user.username}
                       className="w-10 h-10 rounded-full border-2 border-green-400"
                       onError={(e) => {
-                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`;
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.username)}&background=00ff41&color=000&bold=true`;
                       }}
                     />
                     <div>
                       <p className="text-sm font-bold text-white flex items-center gap-1">
-                        {user.username}
+                        {user.displayName || user.username}
                         <span className="text-green-400">✓</span>
                       </p>
                       <p className="text-xs text-gray-400">
@@ -403,7 +402,6 @@ export const Navigation = () => {
                 <>
                   <button
                     onClick={handleDiscordLogin}
-                    
                     className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
