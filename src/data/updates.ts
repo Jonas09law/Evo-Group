@@ -3,7 +3,7 @@ export const updates = [
     slug: "update-2-02",
     date: "28/11/2025",
     title: "UPDATE 2.02",
-    image: "https://media.discordapp.net/attachments/1441545324597608659/1446527913720676464/ATUALIZACAO.png?format=webp",
+    image: "https://media.discordapp.net/attachments/1441545324597608659/1446527913720676464/ATUALIZACAO.png?ex=69344f99&is=6932fe19&hm=4d7c261157957b6f32e497cd68057335d0b23bcdb900a2d17c66eff90cc5c896&=&format=webp&quality=lossless&width=1006&height=1006",
     category: "PATCH NOTES",
     contentText: `
 Alterado logo do fluxos no jogo
@@ -112,3 +112,4 @@ Arrumado PC
 Otimização no jogo`,
   },
 ];
+
