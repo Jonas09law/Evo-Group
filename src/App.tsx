@@ -17,7 +17,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/updates/:slug" element={<UpdatePage />} /> {/* ✅ rota dinâmica */}
+          <Route path="/updates/:slug" element={<UpdatePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
