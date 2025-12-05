@@ -14,13 +14,13 @@ const updates = [
 Sistema de pintar carro *(AINDA EM DESENVOLVIMENTO)*
 Arrumado atm
 Adicionado facs de ruas
-⁠Novas roupas, incluindo novos modelos e correções de algumas roupas
+Novas roupas, incluindo novos modelos e correções de algumas roupas
 Sistema de cassino
 Arrumado chuva
-⁠Ativado o desmanche de veículos
+Ativado o desmanche de veículos
 Nova UI prefeitura
-Adicionado marcadores para identificar cada lugar 
-Agora é possível partir vidros 
+Adicionado marcadores para identificar cada lugar
+Agora é possível partir vidros
 Arrumado varios erros de sons
 Adicionado TrenoNatal
 Arrumado emprego de caminhoneiro
@@ -38,7 +38,7 @@ Arena de pvp
 Alguns comandos do admin foram restringidos
 Corrigido comandos que dão erro no admin
 Algumas texturas arrumadas
-Melhorado sistema de amarrar 
+Melhorado sistema de amarrar
 Arrumado o amarrar via discord
 Arrumado alguns erros de animação
 Arrumado TabletPrisional
@@ -90,18 +90,18 @@ Arrumado armário da CHOQUE
 Arrumado carro da CHOQUE
 Colocado farda da CHOQUE (Temporaria)
 Arrumado fabricação da Chave
-Arrumado algumas paredes invisíveis 
+Arrumado algumas paredes invisíveis
 Adicionado loja de armas (Pode se comprar coletes etc)
-Adicionado sistema de radio 
+Adicionado sistema de radio
 Adicionado nova arma M4A1 RIS
 Adicionado nova arma M16A
 Adicionado Porte de armas
 Arrumado UI mercado
 Arrumado coletes (Agr ja n fica imortal)
-Arrumado parts não ancoradas 
-Novo carro  Lamborghini Galardo
-Arrumado fazenda 
-Arrumado erro ao fabricar a Hi Power 
+Arrumado parts não ancoradas
+Novo carro Lamborghini Galardo
+Arrumado fazenda
+Arrumado erro ao fabricar a Hi Power
 Adicionado Turquia
 Agora da para comprar tratamentos na farmácia
 Mais lixos espalhados pela cidade`,
@@ -122,14 +122,14 @@ Arrumado alguns spykes de lag ao entrar no jogo
 Agora ao sair do carro ele freia automaticamente
 Adicionado buzina em todos os carros
 Adicionado burnout
-Adicionado barulho ao ligar o carro 
+Adicionado barulho ao ligar o carro
 Agora quando sai do carro ele freia automaticamente
 Nova UI dos carros
 Agora para ver a hotbar voce ver a hotbar precisa ou abrir o inventario ou apertar TAB
 Agora ao spawnar um carro ele aparecera trancado
 Arrumado erros no driveseat onde dava pra entrar segurando E mesmo trancado
 Agora os plugins e os sistemas dos carros foram unificados finalmente
-Removido o m_steer_camera do R do mouse 
+Removido o m_steer_camera do R do mouse
 Agora a foto do menu do jogo voltou a ser a normal
 Adicionado chuva normalmente de novo
 Aidicionado portoes automaticos em locais do mapa
@@ -158,8 +158,8 @@ Nova farda ROTA
 Novo carro para os mecanicos
 Nova UI armarios corps/facs
 Arrumado Gari
-Arrumado sistema de fabricar armas 
-Arrumado emprego de fazendeiro 
+Arrumado sistema de fabricar armas
+Arrumado emprego de fazendeiro
 Arrumado sistema de GARI
 Nova intro
 Arrumado varios bugs no jogo
@@ -174,7 +174,7 @@ Otimização no jogo`,
 
 export default function NewsUpdatesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedUpdate, setSelectedUpdate] = useState(null);
+  const [selectedUpdate, setSelectedUpdate] = useState<typeof updates[0] | null>(null);
 
   const nextSlide = () => {
     if (currentIndex < updates.length - 3) setCurrentIndex(currentIndex + 1);
@@ -184,23 +184,56 @@ export default function NewsUpdatesSection() {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
-  const getVisibleCards = () => {
-    return updates.slice(currentIndex, currentIndex + 3);
-  }; className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
+  const getVisibleCards = () => updates.slice(currentIndex, currentIndex + 3);
+
+  return (
+    <>
+      <section id="noticias" className="py-24 bg-gradient-hero relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2 className="text-5xl md:text-6xl font-bold text-gradient font-rajdhani mb-4 uppercase tracking-wider">
+              NOTÍCIAS & ATUALIZAÇÕES
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto font-rajdhani">
+              Confira o que está acontecendo nas cidades da EVO GROUP
+            </p>
+          </div>
+
+          {/* Carousel */}
+          <div className="relative max-w-7xl mx-auto">
+            {updates.length > 3 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                >
                   <ChevronLeft className="w-6 h-6 text-primary" />
                 </button>
-
-                <button onClick={nextSlide} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary"
+                >
                   <ChevronRight className="w-6 h-6 text-primary" />
                 </button>
               </>
             )}
 
-            <div className={`grid gap-6 px-4 md:grid-cols-3`}>
+            <div className="grid gap-6 px-4 md:grid-cols-3">
               {getVisibleCards().map((update) => (
-                <Card key={update.date + update.title} onClick={() => setSelectedUpdate(update)} className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary">
+                <Card
+                  key={update.date + update.title}
+                  onClick={() => setSelectedUpdate(update)}
+                  className="bg-card border-border overflow-hidden group cursor-pointer transition-all duration-300 hover:border-primary"
+                >
                   <div className="relative h-56 overflow-hidden">
-                    <img src={update.image} alt={update.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <img
+                      src={update.image}
+                      alt={update.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     <div className="absolute top-4 left-4 px-3 py-1 bg-background/60 border border-primary rounded-md">
                       <span className="text-primary text-sm font-bold font-rajdhani">{update.date}</span>
@@ -221,7 +254,13 @@ export default function NewsUpdatesSection() {
             {updates.length > 3 && (
               <div className="flex justify-center gap-2 mt-8">
                 {updates.map((_, idx) => (
-                  <button key={idx} onClick={() => setCurrentIndex(idx)} className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"}`} />
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      idx === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground"
+                    }`}
+                  />
                 ))}
               </div>
             )}
@@ -229,10 +268,14 @@ export default function NewsUpdatesSection() {
         </div>
       </section>
 
+      {/* Modal */}
       {selectedUpdate && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-gradient-to-br from-background via-card to-background border border-border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-            <button onClick={() => setSelectedUpdate(null)} className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10">
+            <button
+              onClick={() => setSelectedUpdate(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-card hover:bg-primary/20 border border-border hover:border-primary transition-all z-10"
+            >
               <X className="w-6 h-6 text-foreground" />
             </button>
 
@@ -253,17 +296,16 @@ export default function NewsUpdatesSection() {
             </div>
 
             <div className="p-8 space-y-4">
-              {selectedUpdate.contentText &&
-                selectedUpdate.contentText
-                  .trim()
-                  .split("\n")
-                  .filter((l) => l.trim() !== "")
-                  .map((line, idx) => (
-                    <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>{line}</span>
-                    </p>
-                  ))}
+              {selectedUpdate.contentText
+                .trim()
+                .split("\n")
+                .filter((line) => line.trim() !== "")
+                .map((line, idx) => (
+                  <p key={idx} className="text-foreground/90 pl-4 py-1 font-rajdhani flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>{line}</span>
+                  </p>
+                ))}
             </div>
           </div>
         </div>
