@@ -10,6 +10,9 @@ const updates = [
   { date: "21/11/2025", title: "UPDATE 2.01", image: atualizacao, category: "PATCH NOTES", contentText: `Arrumado armário da CHOQUE ...` },
   { date: "20/11/2025", title: "MEGA UPDATE", image: atualizacao, category: "PATCH NOTES", contentText: `Mapa totalmente refeito ...` },
   { date: "18/11/2025", title: "MINOR PATCH", image: atualizacao, category: "PATCH NOTES", contentText: `Correções menores ...` },
+  { date: "21/11/2025", title: "UPDATE 2.01", image: atualizacao, category: "PATCH NOTES", contentText: `Arrumado armário da CHOQUE ...` },
+  { date: "20/11/2025", title: "MEGA UPDATE", image: atualizacao, category: "PATCH NOTES", contentText: `Mapa totalmente refeito ...` },
+  { date: "18/11/2025", title: "MINOR PATCH", image: atualizacao, category: "PATCH NOTES", contentText: `Correções menores ...` },
 ];
 
 export default function NewsUpdatesSection() {
@@ -155,3 +158,4 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
