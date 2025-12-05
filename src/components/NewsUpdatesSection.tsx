@@ -184,7 +184,9 @@ export default function NewsUpdatesSection() {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
-  const getVisibleCards = () => updates.slice(currentIndex, currentIndex + 3); className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
+  const getVisibleCards = () => {
+    return updates.slice(currentIndex, currentIndex + 3);
+  }; className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card/80 hover:bg-card border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:border-primary">
                   <ChevronLeft className="w-6 h-6 text-primary" />
                 </button>
 
