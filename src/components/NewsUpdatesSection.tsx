@@ -5,48 +5,11 @@ import { useState } from "react";
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
-  {
-    date: "05/12/2025",
-    title: "UPDATE 2.03",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Sistema de pintar carro *(AINDA EM DESENVOLVIMENTO)* ...`,
-  },
-  {
-    date: "28/11/2025",
-    title: "UPDATE 2.02",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Alterado logo do fluxos no jogo ...`,
-  },
-  {
-    date: "21/11/2025",
-    title: "UPDATE 2.01",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Arrumado armário da CHOQUE ...`,
-  },
-  {
-    date: "20/11/2025",
-    title: "MEGA UPDATE",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Mapa totalmente refeito ...`,
-  },
-  {
-    date: "18/11/2025",
-    title: "MINOR PATCH",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Correções menores ...`,
-  },
-    {
-    date: "18/11/2025",
-    title: "MINOR PATCH",
-    image: atualizacao,
-    category: "PATCH NOTES",
-    contentText: `Correções menores ...`,
-  },
+  { date: "05/12/2025", title: "UPDATE 2.03", image: atualizacao, category: "PATCH NOTES", contentText: `Sistema de pintar carro *(AINDA EM DESENVOLVIMENTO)* ...` },
+  { date: "28/11/2025", title: "UPDATE 2.02", image: atualizacao, category: "PATCH NOTES", contentText: `Alterado logo do fluxos no jogo ...` },
+  { date: "21/11/2025", title: "UPDATE 2.01", image: atualizacao, category: "PATCH NOTES", contentText: `Arrumado armário da CHOQUE ...` },
+  { date: "20/11/2025", title: "MEGA UPDATE", image: atualizacao, category: "PATCH NOTES", contentText: `Mapa totalmente refeito ...` },
+  { date: "18/11/2025", title: "MINOR PATCH", image: atualizacao, category: "PATCH NOTES", contentText: `Correções menores ...` },
 ];
 
 export default function NewsUpdatesSection() {
@@ -64,9 +27,10 @@ export default function NewsUpdatesSection() {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
   };
 
+  // Lógica ajustada para mostrar updates de forma progressiva ao voltar
   const getVisibleCards = () => {
-    const start = currentSlide * cardsPerView;
-    return updates.slice(start, start + cardsPerView);
+    const maxIndex = (currentSlide + 1) * cardsPerView;
+    return updates.slice(0, Math.min(maxIndex, updates.length));
   };
 
   return (
@@ -191,4 +155,3 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
-
