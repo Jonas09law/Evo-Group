@@ -10,9 +10,6 @@ const updates = [
   { date: "21/11/2025", title: "UPDATE 2.01", image: atualizacao, category: "PATCH NOTES", contentText: `Arrumado armário da CHOQUE ...` },
   { date: "20/11/2025", title: "MEGA UPDATE", image: atualizacao, category: "PATCH NOTES", contentText: `Mapa totalmente refeito ...` },
   { date: "18/11/2025", title: "MINOR PATCH", image: atualizacao, category: "PATCH NOTES", contentText: `Correções menores ...` },
-  { date: "21/11/2025", title: "UPDATE 2.01", image: atualizacao, category: "PATCH NOTES", contentText: `Arrumado armário da CHOQUE ...` },
-  { date: "20/11/2025", title: "MEGA UPDATE", image: atualizacao, category: "PATCH NOTES", contentText: `Mapa totalmente refeito ...` },
-  { date: "18/11/2025", title: "MINOR PATCH", image: atualizacao, category: "PATCH NOTES", contentText: `Correções menores ...` },
 ];
 
 export default function NewsUpdatesSection() {
@@ -30,10 +27,10 @@ export default function NewsUpdatesSection() {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
   };
 
-  // Lógica ajustada para mostrar updates de forma progressiva ao voltar
+  // Pega **apenas os 3 updates do slide atual**
   const getVisibleCards = () => {
-    const maxIndex = (currentSlide + 1) * cardsPerView;
-    return updates.slice(0, Math.min(maxIndex, updates.length));
+    const start = currentSlide * cardsPerView;
+    return updates.slice(start, start + cardsPerView);
   };
 
   return (
@@ -158,4 +155,3 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
-
