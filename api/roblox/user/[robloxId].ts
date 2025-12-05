@@ -22,11 +22,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const data = await response.json();
-    // Estrutura simplificada do retorno
+
     const userData = {
       id: data.id,
       username: data.name,
       displayName: data.displayName,
+      avatar: `https://www.roblox.com/headshot-thumbnail/image?userId=${data.id}&width=150&height=150&format=png`,
       created: data.created,
     };
 
