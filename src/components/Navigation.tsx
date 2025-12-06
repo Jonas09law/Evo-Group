@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAdminCheck } from "@/components/hooks/useAdminCheck";
 
 import EvoLogo from "@/assets/AAAAAA.png"; 
 
@@ -25,6 +26,9 @@ export const Navigation = () => {
     const [error, setError] = useState("");
     const [user, setUser] = useState<UserData | null>(null);
     const [showLogout, setShowLogout] = useState(false);
+    
+    // Admin check
+    const adminStatus = useAdminCheck(user?.discordId || null);
 
     const handleDiscordCallback = async (code: string) => {
         setIsLoading(true);
@@ -135,6 +139,11 @@ export const Navigation = () => {
         }
     };
 
+    const navigateToAdmin = () => {
+        window.location.href = '/admin';
+        setIsOpen(false);
+    };
+
     const handleDiscordLogin = () => {
         const state = Math.random().toString(36).substring(2); 
         localStorage.setItem("oauth_state", state);
@@ -173,6 +182,17 @@ export const Navigation = () => {
                                 </button>
                             ))}
 
+                            {/* Admin Link - Only show if user is admin */}
+                            {adminStatus.isAdmin && !adminStatus.loading && (
+                                <button
+                                    onClick={navigateToAdmin}
+                                    className="text-sm text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2"
+                                >
+                                    <Shield className="w-4 h-4" />
+                                    ADMIN
+                                </button>
+                            )}
+
                             {!user ? (
                                 <button
                                     onClick={() => setIsLoginModalOpen(true)}
@@ -198,6 +218,11 @@ export const Navigation = () => {
                                             <p className="text-xs font-bold text-white leading-tight flex items-center gap-1">
                                                 {user.username}
                                                 <span className="text-green-400" title="Verificado via Discord">✓</span>
+                                                {adminStatus.isAdmin && (
+                                                    <span className="text-red-400 ml-1" title="Admin">
+                                                        <Shield className="w-3 h-3 inline" />
+                                                    </span>
+                                                )}
                                             </p>
                                             <p className="text-[10px] text-gray-400">
                                                 ID: {user.id}
@@ -241,6 +266,17 @@ export const Navigation = () => {
                                 </button>
                             ))}
 
+                            {/* Admin Link Mobile */}
+                            {adminStatus.isAdmin && !adminStatus.loading && (
+                                <button
+                                    onClick={navigateToAdmin}
+                                    className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                                >
+                                    <Shield className="w-4 h-4 inline mr-2" />
+                                    ADMIN
+                                </button>
+                            )}
+
                             {!user ? (
                                 <button
                                     onClick={() => { setIsLoginModalOpen(true); setIsOpen(false); }}
@@ -261,7 +297,13 @@ export const Navigation = () => {
                                         />
                                         <div>
                                             <p className="text-sm font-bold text-white flex items-center gap-1">
-                                                {user.username} <span className="text-green-400">✓</span>
+                                                {user.username} 
+                                                <span className="text-green-400">✓</span>
+                                                {adminStatus.isAdmin && (
+                                                    <span className="text-red-400 ml-1">
+                                                        <Shield className="w-3 h-3 inline" />
+                                                    </span>
+                                                )}
                                             </p>
                                             <p className="text-xs text-gray-400">ID: {user.id}</p>
                                         </div>
