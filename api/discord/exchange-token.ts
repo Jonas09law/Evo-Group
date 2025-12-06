@@ -12,13 +12,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { code } = req.body;
   if (!code) return res.status(400).json({ error: 'Code is required' });
 
-  const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+  // ⚡ Client ID hardcoded (pode ser exposto)
+  const DISCORD_CLIENT_ID = "1399455643265536051";
   const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
   const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI;
 
-  if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI) {
+  if (!DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI) {
     console.error('⚠️ Discord credentials missing in environment:', {
-      DISCORD_CLIENT_ID: !!DISCORD_CLIENT_ID,
       DISCORD_CLIENT_SECRET: !!DISCORD_CLIENT_SECRET,
       DISCORD_REDIRECT_URI: !!DISCORD_REDIRECT_URI,
     });
@@ -26,13 +26,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // ⚡️ Garantindo que client_id e client_secret sejam strings
     const params = new URLSearchParams({
-      client_id: String(DISCORD_CLIENT_ID),
-      client_secret: String(DISCORD_CLIENT_SECRET),
+      client_id: DISCORD_CLIENT_ID, // já hardcoded
+      client_secret: DISCORD_CLIENT_SECRET,
       grant_type: 'authorization_code',
       code,
-      redirect_uri: String(DISCORD_REDIRECT_URI),
+      redirect_uri: DISCORD_REDIRECT_URI,
     });
 
     const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
@@ -51,13 +50,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       let errorMsg = 'Erro ao trocar code por token';
-      if (tokenData.error === 'invalid_grant') {
-        errorMsg += ' (Código expirado ou já usado)';
-      } else if (tokenData.error === 'invalid_client') {
-        errorMsg += ' (Client ID/Secret incorreto)';
-      } else if (tokenData.error === 'redirect_mismatch') {
-        errorMsg += ' (Redirect URI não confere)';
-      }
+      if (tokenData.error === 'invalid_grant') errorMsg += ' (Código expirado ou já usado)';
+      else if (tokenData.error === 'invalid_client') errorMsg += ' (Client Secret incorreto)';
+      else if (tokenData.error === 'redirect_mismatch') errorMsg += ' (Redirect URI não confere)';
 
       return res.status(401).json({ error: errorMsg, details: tokenData });
     }
