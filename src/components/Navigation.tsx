@@ -8,8 +8,7 @@ const DISCORD_REDIRECT_URI = window.location.origin + "/";
 const BLOXLINK_API_KEY = "ca1a7cff-bef9-4f86-b145-75e80c3d2e03";
 const DISCORD_SERVER_ID = "1201255095745130556";
 
-// IDs dos admins configuráveis
-const ADMIN_ROBLOX_IDS = ["123456789", "987654321"];
+const ADMIN_ROBLOX_IDS = ["1171917507", "987654321"];
 
 interface UserData {
   id: string;
