@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAdminCheck } from "@/components/hooks/useAdminCheck";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 import EvoLogo from "@/assets/AAAAAA.png"; 
 
