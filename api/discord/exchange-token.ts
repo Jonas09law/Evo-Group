@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
-
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -12,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!code) { 
     return res.status(400).json({ error: "Code is required" });
   }
-  
+
   const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
   const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
   const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI;
@@ -27,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   params.append("client_secret", DISCORD_CLIENT_SECRET);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
-  params.append("redirect_uri", DISCORD_REDIRECT_URI);
+  params.append("redirect_uri", DISCORD_REDIRECT_URI); 
 
   try {
     const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
@@ -40,7 +39,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!tokenResponse.ok) {
       console.error("Discord token error:", tokenData);
-
       return res.status(401).json({ error: "Erro ao trocar code por token", details: tokenData });
     }
 
