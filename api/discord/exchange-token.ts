@@ -26,12 +26,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // ⚡️ Garantindo que client_id e client_secret sejam strings
     const params = new URLSearchParams({
-      client_id: DISCORD_CLIENT_ID,
-      client_secret: DISCORD_CLIENT_SECRET,
+      client_id: String(DISCORD_CLIENT_ID),
+      client_secret: String(DISCORD_CLIENT_SECRET),
       grant_type: 'authorization_code',
       code,
-      redirect_uri: DISCORD_REDIRECT_URI,
+      redirect_uri: String(DISCORD_REDIRECT_URI),
     });
 
     const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
@@ -42,7 +43,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const tokenData = await tokenResponse.json();
 
-    // Logging detalhado em caso de falha
     if (!tokenResponse.ok) {
       console.error('❌ Discord token exchange failed', {
         status: tokenResponse.status,
