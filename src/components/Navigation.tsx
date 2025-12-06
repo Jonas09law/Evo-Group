@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import EvoLogo from "@/assets/AAAAAA.png";
 
 const DISCORD_CLIENT_ID = "1399455643265536051";
@@ -98,9 +97,7 @@ export const Navigation = () => {
 
       const bloxlinkResponse = await fetch(
         `https://api.blox.link/v4/public/guilds/${DISCORD_SERVER_ID}/discord-to-roblox/${discordId}`,
-        {
-          headers: { Authorization: BLOXLINK_API_KEY },
-        }
+        { headers: { Authorization: BLOXLINK_API_KEY } }
       );
 
       if (!bloxlinkResponse.ok) {
@@ -126,23 +123,25 @@ export const Navigation = () => {
         return;
       }
 
-let robloxUsername = `${robloxUsername}`;
-let robloxDisplayName = robloxUsername;
-let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
+      // Fallback inicial com robloxId
+      let robloxUsername = `User_${robloxId}`;
+      let robloxDisplayName = robloxUsername;
+      let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
 
-try {
-  const robloxUserResponse = await fetch(`/api/roblox/${robloxId}`);
-  if (robloxUserResponse.ok) {
-    const robloxUserData = await robloxUserResponse.json();
-    robloxUsername = robloxUserData.username || robloxUsername;
-    robloxDisplayName = robloxUserData.displayName || robloxUserData.username || robloxUsername;
-    robloxAvatar = robloxUserData.avatar || robloxAvatar;
-  } else {
-    console.warn("Falha ao buscar usuário Roblox no backend:", robloxUserResponse.status);
-  }
-} catch (err) {
-  console.error("Erro ao buscar usuário Roblox via backend:", err);
-}
+      try {
+        const robloxUserResponse = await fetch(`/api/roblox/user/${robloxId}`);
+        if (robloxUserResponse.ok) {
+          const robloxUserData = await robloxUserResponse.json();
+          robloxUsername = robloxUserData.username || robloxUsername;
+          robloxDisplayName =
+            robloxUserData.displayName || robloxUserData.username || robloxUsername;
+          robloxAvatar = robloxUserData.avatar || robloxAvatar;
+        } else {
+          console.warn("Falha ao buscar usuário Roblox no backend:", robloxUserResponse.status);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar usuário Roblox via backend:", err);
+      }
 
       const userData: UserData = {
         id: robloxId,
