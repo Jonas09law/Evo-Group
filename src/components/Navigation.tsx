@@ -6,6 +6,9 @@ import EvoLogo from "@/assets/AAAAAA.png";
 const DISCORD_CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!;
 const DISCORD_REDIRECT_URI = process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!;
 
+console.log("Client ID front:", process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID);
+console.log("Redirect URI front:", process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI);
+
 interface UserData {
   id: string;
   username: string;
