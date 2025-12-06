@@ -1,4 +1,3 @@
-// src/hooks/useAdminCheck.ts
 import { useState, useEffect } from 'react';
 
 interface AdminStatus {
@@ -56,3 +55,4 @@ export function useAdminCheck(discordId: string | null): AdminStatus {
 
   return adminStatus;
 }
+
