@@ -1,17 +1,11 @@
-// src/components/Navigation.tsx
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// Verifique se o caminho do seu logo está correto
+
 import EvoLogo from "@/assets/AAAAAA.png"; 
 
-// ⚡️ Chaves Públicas do Discord (pode ser hardcoded, eliminando o erro 'undefined')
 const DISCORD_CLIENT_ID = "1399455643265536051"; 
-const DISCORD_REDIRECT_URI = "https://evo-group.vercel.app/"; // Defina o seu URL registrado no Discord
-
-console.log("Client ID front (Fixed):", DISCORD_CLIENT_ID);
-console.log("Redirect URI front (Fixed):", DISCORD_REDIRECT_URI);
-
+const DISCORD_REDIRECT_URI = "https://evo-group.vercel.app/"; 
 
 interface UserData {
     id: string;
@@ -32,14 +26,11 @@ export const Navigation = () => {
     const [user, setUser] = useState<UserData | null>(null);
     const [showLogout, setShowLogout] = useState(false);
 
-    // Função central para lidar com a troca de token e obtenção de dados
     const handleDiscordCallback = async (code: string) => {
         setIsLoading(true);
         setError("");
-        console.log("Received Discord code:", code);
 
         try {
-            // 1. Troca de Código por Token (Lado do Servidor)
             const tokenResponse = await fetch("/api/discord/exchange-token", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -47,22 +38,16 @@ export const Navigation = () => {
             });
 
             if (!tokenResponse.ok) {
-                const errText = await tokenResponse.text();
-                console.error("Token exchange failed:", errText); 
                 throw new Error("Falha ao obter token do Discord.");
             }
 
             const { access_token } = await tokenResponse.json();
-            console.log("Discord access token:", access_token);
 
-            // 2. Obter Dados do Usuário Discord - usando o token recebido
             const discordUserRes = await fetch("https://discord.com/api/users/@me", {
                 headers: { Authorization: `Bearer ${access_token}` },
             });
 
             if (!discordUserRes.ok) {
-                const errText = await discordUserRes.text();
-                console.error("Failed to fetch Discord user:", errText);
                 throw new Error("Falha ao buscar usuário Discord.");
             }
 
@@ -71,52 +56,51 @@ export const Navigation = () => {
 
             const discordAvatar = discordUser.avatar
                 ? `https://cdn.discordapp.com/avatars/${discordId}/${discordUser.avatar}.png`
-                : `https://ui-avatars.com/api/?name=${discordUser.username}&background=5865F2&color=fff`;
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(discordUser.username)}&background=5865F2&color=fff`;
 
-            // 3. Obter ID do Roblox (Lado do Servidor usando Bloxlink Key)
             const bloxResponse = await fetch(`/api/bloxlink/discord-to-roblox?discordId=${discordId}`);
             if (!bloxResponse.ok) {
                 setError("Sua conta não está verificada no Bloxlink.");
                 setIsLoginModalOpen(true);
-            } else {
-                const bloxData = await bloxResponse.json();
-                console.log("Bloxlink data:", bloxData);
-                const robloxId = bloxData.robloxID;
+                return;
+            }
 
-                let robloxUsername = `User_${robloxId}`;
-                let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
+            const bloxData = await bloxResponse.json();
+            const robloxId = bloxData.robloxID;
 
-                // 4. Obter Nome e Avatar do Roblox
+            let robloxUsername = `User_${robloxId}`;
+            let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
+
+            try {
                 const robloxRes = await fetch(`/api/roblox/${robloxId}`);
                 if (robloxRes.ok) {
                     const data = await robloxRes.json();
-                    robloxUsername = data.name || robloxUsername;
+                    robloxUsername = data.displayname || data.name || robloxUsername;
                     robloxAvatar = data.avatar || robloxAvatar;
                 }
+            } catch (err) {
 
-                const userData: UserData = {
-                    id: robloxId,
-                    username: robloxUsername,
-                    avatar: robloxAvatar,
-                    discordId,
-                    discordUsername: discordUser.username,
-                    discordAvatar,
-                    verified: true,
-                    loginDate: new Date().toISOString(),
-                };
-
-                localStorage.setItem("robloxUser", JSON.stringify(userData));
-                setUser(userData);
             }
 
-            // Limpa os parâmetros de code/state da URL após o processamento.
+            const userData: UserData = {
+                id: robloxId,
+                username: robloxUsername,
+                avatar: robloxAvatar,
+                discordId,
+                discordUsername: discordUser.username,
+                discordAvatar,
+                verified: true,
+                loginDate: new Date().toISOString(),
+            };
+
+            localStorage.setItem("robloxUser", JSON.stringify(userData));
+            setUser(userData);
+
             window.history.replaceState({}, document.title, window.location.pathname);
-            localStorage.removeItem("oauth_state"); // Limpa o estado salvo
         } catch (err: any) {
-            console.error("Login error:", err);
             setError(err.message || "Erro no login.");
             setIsLoginModalOpen(true);
-            window.history.replaceState({}, document.title, window.location.pathname); // Limpa a URL em caso de erro
+            window.history.replaceState({}, document.title, window.location.pathname);
         } finally {
             setIsLoading(false);
         }
@@ -132,9 +116,7 @@ export const Navigation = () => {
         const savedState = localStorage.getItem("oauth_state");
 
         if (code) {
-            // ⚡️ MITIGAÇÃO DE CSRF: Verifica se o state da URL corresponde ao salvo
             if (!urlState || urlState !== savedState || !savedState) {
-                console.error("State mismatch or missing. Potential CSRF attack blocked.");
                 setError("Erro no processo de autenticação (Violação de segurança).");
                 setIsLoginModalOpen(true);
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -154,11 +136,9 @@ export const Navigation = () => {
     };
 
     const handleDiscordLogin = () => {
-        // 1. Geração e Salvamento do State (para prevenção de CSRF)
         const state = Math.random().toString(36).substring(2); 
         localStorage.setItem("oauth_state", state);
 
-        // 2. Construção do URL com as chaves públicas hardcoded
         const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=${state}`;
         window.location.href = url;
     };
