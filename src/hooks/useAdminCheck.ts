@@ -14,13 +14,18 @@ export function useAdminCheck(discordId: string | null) {
     setLoading(true);
 
     fetch(`/api/check-admin?discordId=${discordId}`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('Erro na API');
+        return r.json();
+      })
       .then(data => {
         setIsAdmin(data.isAdmin === true);
-        setLoading(false);
       })
-      .catch(() => {
+      .catch(err => {
+        console.error('Erro ao checar admin:', err);
         setIsAdmin(false);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [discordId]);
