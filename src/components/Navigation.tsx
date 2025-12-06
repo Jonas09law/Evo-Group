@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAdminCheck } from "@/hooks/useAdminCheck";
+import EvoLogo from "@/assets/AAAAAA.png";
 
-import EvoLogo from "@/assets/AAAAAA.png"; 
-
-const DISCORD_CLIENT_ID = "1399455643265536051"; 
-const DISCORD_REDIRECT_URI = "https://evo-group.vercel.app/"; 
+const DISCORD_CLIENT_ID = "1399455643265536051";
+const DISCORD_REDIRECT_URI = "https://evo-group.vercel.app/";
 
 interface UserData {
     id: string;
@@ -26,38 +24,61 @@ export const Navigation = () => {
     const [error, setError] = useState("");
     const [user, setUser] = useState<UserData | null>(null);
     const [showLogout, setShowLogout] = useState(false);
-    
-    // Admin check
-    const adminStatus = useAdminCheck(user?.discordId || null);
+
+    // Estado manual do admin (resolve o bug de cache do useAdminCheck)
+    const [adminStatus, setAdminStatus] = useState<{
+        isAdmin: boolean;
+        loading: boolean;
+        rank?: number;
+    }>({
+        isAdmin: false,
+        loading: true,
+    });
+
+    // Verifica se o usuário logado é admin (roda sempre que o discordId mudar)
+    useEffect(() => {
+        if (!user?.discordId) {
+            setAdminStatus({ isAdmin: false, loading: false });
+            return;
+        }
+
+        setAdminStatus({ isAdmin: false, loading: true });
+
+        fetch(`/api/api?action=check_admin&discordId=${user.discordId}`)
+            .then(r => r.json())
+            .then(data => {
+                setAdminStatus({
+                    isAdmin: !!data.success && data.isAdmin,
+                    rank: data.rank || 0,
+                    loading: false,
+                });
+            })
+            .catch(err => {
+                console.error("Erro ao checar admin:", err);
+                setAdminStatus({ isAdmin: false, loading: false });
+            });
+    }, [user?.discordId]);
 
     const handleDiscordCallback = async (code: string) => {
         setIsLoading(true);
         setError("");
-
         try {
             const tokenResponse = await fetch("/api/discord/exchange-token", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code }),
             });
-
-            if (!tokenResponse.ok) {
-                throw new Error("Falha ao obter token do Discord.");
-            }
+            if (!tokenResponse.ok) throw new Error("Falha ao obter token do Discord.");
 
             const { access_token } = await tokenResponse.json();
 
             const discordUserRes = await fetch("https://discord.com/api/users/@me", {
                 headers: { Authorization: `Bearer ${access_token}` },
             });
-
-            if (!discordUserRes.ok) {
-                throw new Error("Falha ao buscar usuário Discord.");
-            }
+            if (!discordUserRes.ok) throw new Error("Falha ao buscar usuário Discord.");
 
             const discordUser = await discordUserRes.json();
             const discordId = discordUser.id;
-
             const discordAvatar = discordUser.avatar
                 ? `https://cdn.discordapp.com/avatars/${discordId}/${discordUser.avatar}.png`
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(discordUser.username)}&background=5865F2&color=fff`;
@@ -71,7 +92,6 @@ export const Navigation = () => {
 
             const bloxData = await bloxResponse.json();
             const robloxId = bloxData.robloxID;
-
             let robloxUsername = `User_${robloxId}`;
             let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
 
@@ -82,9 +102,7 @@ export const Navigation = () => {
                     robloxUsername = data.displayname || data.name || robloxUsername;
                     robloxAvatar = data.avatar || robloxAvatar;
                 }
-            } catch (err) {
-
-            }
+            } catch (err) { /* ignora erro opcional */ }
 
             const userData: UserData = {
                 id: robloxId,
@@ -99,7 +117,6 @@ export const Navigation = () => {
 
             localStorage.setItem("robloxUser", JSON.stringify(userData));
             setUser(userData);
-
             window.history.replaceState({}, document.title, window.location.pathname);
         } catch (err: any) {
             setError(err.message || "Erro no login.");
@@ -112,7 +129,13 @@ export const Navigation = () => {
 
     useEffect(() => {
         const savedUser = localStorage.getItem("robloxUser");
-        if (savedUser) setUser(JSON.parse(savedUser));
+        if (savedUser) {
+            try {
+                setUser(JSON.parse(savedUser));
+            } catch (e) {
+                localStorage.removeItem("robloxUser");
+            }
+        }
 
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
@@ -123,11 +146,11 @@ export const Navigation = () => {
             if (!urlState || urlState !== savedState || !savedState) {
                 setError("Erro no processo de autenticação (Violação de segurança).");
                 setIsLoginModalOpen(true);
-                window.history.replaceState({}, document.title, window.location.pathname);
             } else {
                 handleDiscordCallback(code);
             }
-            localStorage.removeItem("oauth_state"); 
+            localStorage.removeItem("oauth_state");
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, []);
 
@@ -145,9 +168,8 @@ export const Navigation = () => {
     };
 
     const handleDiscordLogin = () => {
-        const state = Math.random().toString(36).substring(2); 
+        const state = Math.random().toString(36).substring(2);
         localStorage.setItem("oauth_state", state);
-
         const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=${state}`;
         window.location.href = url;
     };
@@ -156,6 +178,7 @@ export const Navigation = () => {
         localStorage.removeItem("robloxUser");
         setUser(null);
         setShowLogout(false);
+        setAdminStatus({ isAdmin: false, loading: false });
     };
 
     return (
@@ -172,7 +195,7 @@ export const Navigation = () => {
                         </div>
 
                         <div className="hidden md:flex items-center space-x-8">
-                            {["inicio","servidores","ranking","como-jogar","noticias","contato"].map(section => (
+                            {["inicio", "servidores", "ranking", "como-jogar", "noticias", "contato"].map(section => (
                                 <button
                                     key={section}
                                     onClick={() => scrollToSection(section)}
@@ -182,7 +205,7 @@ export const Navigation = () => {
                                 </button>
                             ))}
 
-                            {/* Admin Link - Only show if user is admin */}
+                            {/* Botão ADMIN - agora aparece corretamente */}
                             {adminStatus.isAdmin && !adminStatus.loading && (
                                 <button
                                     onClick={navigateToAdmin}
@@ -218,7 +241,7 @@ export const Navigation = () => {
                                             <p className="text-xs font-bold text-white leading-tight flex items-center gap-1">
                                                 {user.username}
                                                 <span className="text-green-400" title="Verificado via Discord">✓</span>
-                                                {adminStatus.isAdmin && (
+                                                {adminStatus.isAdmin && !adminStatus.loading && (
                                                     <span className="text-red-400 ml-1" title="Admin">
                                                         <Shield className="w-3 h-3 inline" />
                                                     </span>
@@ -254,9 +277,10 @@ export const Navigation = () => {
                         </Button>
                     </div>
 
+                    {/* Menu Mobile */}
                     {isOpen && (
                         <div className="md:hidden py-4 space-y-4 border-t border-border/50">
-                            {["inicio","servidores","ranking","como-jogar","noticias","contato"].map(section => (
+                            {["inicio", "servidores", "ranking", "como-jogar", "noticias", "contato"].map(section => (
                                 <button
                                     key={section}
                                     onClick={() => scrollToSection(section)}
@@ -266,13 +290,13 @@ export const Navigation = () => {
                                 </button>
                             ))}
 
-                            {/* Admin Link Mobile */}
+                            {/* ADMIN no mobile */}
                             {adminStatus.isAdmin && !adminStatus.loading && (
                                 <button
                                     onClick={navigateToAdmin}
-                                    className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                                    className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2"
                                 >
-                                    <Shield className="w-4 h-4 inline mr-2" />
+                                    <Shield className="w-5 h-5" />
                                     ADMIN
                                 </button>
                             )}
@@ -297,9 +321,9 @@ export const Navigation = () => {
                                         />
                                         <div>
                                             <p className="text-sm font-bold text-white flex items-center gap-1">
-                                                {user.username} 
+                                                {user.username}
                                                 <span className="text-green-400">✓</span>
-                                                {adminStatus.isAdmin && (
+                                                {adminStatus.isAdmin && !adminStatus.loading && (
                                                     <span className="text-red-400 ml-1">
                                                         <Shield className="w-3 h-3 inline" />
                                                     </span>
@@ -334,14 +358,12 @@ export const Navigation = () => {
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
-
                         <div className="space-y-4">
                             {error && (
                                 <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm">
                                     {error}
                                 </div>
                             )}
-
                             {isLoading ? (
                                 <div className="text-center py-8">
                                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
