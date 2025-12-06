@@ -8,6 +8,9 @@ const DISCORD_REDIRECT_URI = window.location.origin + "/";
 const BLOXLINK_API_KEY = "ca1a7cff-bef9-4f86-b145-75e80c3d2e03";
 const DISCORD_SERVER_ID = "1201255095745130556";
 
+// IDs dos admins configuráveis
+const ADMIN_ROBLOX_IDS = ["123456789", "987654321"];
+
 interface UserData {
   id: string;
   username: string;
@@ -174,6 +177,8 @@ export const Navigation = () => {
     setShowLogout(false);
   };
 
+  const isAdmin = user ? ADMIN_ROBLOX_IDS.includes(user.id) : false;
+
   return (
     <>
       {/* Navbar */}
@@ -200,6 +205,15 @@ export const Navigation = () => {
                     {section.toUpperCase()}
                   </button>
                 )
+              )}
+
+              {isAdmin && (
+                <button
+                  onClick={() => scrollToSection("admin")}
+                  className="text-sm text-red-500 hover:text-red-400 transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                >
+                  ADMIN
+                </button>
               )}
 
               {!user ? (
@@ -275,6 +289,15 @@ export const Navigation = () => {
                     {section.toUpperCase()}
                   </button>
                 )
+              )}
+
+              {isAdmin && (
+                <button
+                  onClick={() => scrollToSection("admin")}
+                  className="block w-full text-left px-4 py-2 text-red-500 hover:text-red-400 transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                >
+                  ADMIN
+                </button>
               )}
 
               {!user ? (
