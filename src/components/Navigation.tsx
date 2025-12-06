@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EvoLogo from "@/assets/AAAAAA.png";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 const DISCORD_CLIENT_ID = "1399455643265536051";
 const DISCORD_REDIRECT_URI = "https://evo-group.vercel.app/";
@@ -25,16 +26,15 @@ export const Navigation = () => {
   const [user, setUser] = useState<UserData | null>(null);
   const [showLogout, setShowLogout] = useState(false);
 
-  // Estado do admin — agora verifica pelo cargo no Discord
-  const [adminStatus, setAdminStatus] = useState<{
-    isAdmin: boolean;
-    loading: boolean;
-  }>({
+  const [adminStatus, setAdminStatus] = useState<{ isAdmin: boolean; loading: boolean }>({
     isAdmin: false,
     loading: true,
   });
 
-  // Verifica se o usuário tem o cargo de admin (1246102365203988695)
+  // Controle do painel Admin
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
+
+  // Verifica se o usuário tem o cargo de admin
   useEffect(() => {
     if (!user?.discordId) {
       setAdminStatus({ isAdmin: false, loading: false });
@@ -42,15 +42,10 @@ export const Navigation = () => {
     }
 
     setAdminStatus({ isAdmin: false, loading: true });
-
-    // URL CORRETA: /api/api.php (porque o arquivo tá em public/api/api.php)
     fetch(`/api/check-admin?discordId=${user.discordId}`)
       .then(r => r.json())
       .then(data => {
-        setAdminStatus({
-          isAdmin: data.isAdmin === true,
-          loading: false
-        });
+        setAdminStatus({ isAdmin: data.isAdmin === true, loading: false });
       })
       .catch(err => {
         console.error("Erro ao checar admin:", err);
@@ -58,7 +53,6 @@ export const Navigation = () => {
       });
   }, [user?.discordId]);
 
-  // === LOGIN COM DISCORD (igual antes) ===
   const handleDiscordCallback = async (code: string) => {
     setIsLoading(true);
     setError("");
@@ -69,14 +63,12 @@ export const Navigation = () => {
         body: JSON.stringify({ code }),
       });
       if (!tokenResponse.ok) throw new Error("Falha ao obter token do Discord.");
-
       const { access_token } = await tokenResponse.json();
 
       const discordUserRes = await fetch("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
       if (!discordUserRes.ok) throw new Error("Falha ao buscar usuário Discord.");
-
       const discordUser = await discordUserRes.json();
       const discordId = discordUser.id;
 
@@ -152,15 +144,21 @@ export const Navigation = () => {
     setIsOpen(false);
   };
 
-  const navigateToAdmin = () => {
-    window.location.href = "/admin";
+  const openAdminPanel = () => {
+    setIsAdminPanelOpen(true);
     setIsOpen(false);
+  };
+
+  const closeAdminPanel = () => {
+    setIsAdminPanelOpen(false);
   };
 
   const handleDiscordLogin = () => {
     const state = Math.random().toString(36).substring(2);
     localStorage.setItem("oauth_state", state);
-    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=${state}`;
+    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+      DISCORD_REDIRECT_URI
+    )}&response_type=code&scope=identify&state=${state}`;
   };
 
   const handleLogout = () => {
@@ -168,6 +166,7 @@ export const Navigation = () => {
     setUser(null);
     setShowLogout(false);
     setAdminStatus({ isAdmin: false, loading: false });
+    setIsAdminPanelOpen(false);
   };
 
   return (
@@ -176,31 +175,49 @@ export const Navigation = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <img src={EvoLogo} alt="EVO Group Logo" className="h-10 w-auto object-contain drop-shadow-lg hover:drop-shadow-xl transition-all duration-300" />
+              <img
+                src={EvoLogo}
+                alt="EVO Group Logo"
+                className="h-10 w-auto object-contain drop-shadow-lg hover:drop-shadow-xl transition-all duration-300"
+              />
             </div>
 
             <div className="hidden md:flex items-center space-x-8">
               {["inicio", "servidores", "ranking", "como-jogar", "noticias", "contato"].map(section => (
-                <button key={section} onClick={() => scrollToSection(section)} className="text-sm text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase">
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className="text-sm text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                >
                   {section.toUpperCase()}
                 </button>
               ))}
 
-              {/* BOTÃO ADMIN — SÓ APARECE QUANDO TEM O CARGO */}
               {adminStatus.isAdmin && !adminStatus.loading && (
-                <button onClick={navigateToAdmin} className="text-sm text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2">
+                <button
+                  onClick={openAdminPanel}
+                  className="text-sm text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2"
+                >
                   <Shield className="w-4 h-4" /> ADMIN
                 </button>
               )}
 
               {!user ? (
-                <button onClick={() => setIsLoginModalOpen(true)} className="flex items-center gap-2 text-white hover:text-green-400 transition-colors font-bold text-sm uppercase">
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="flex items-center gap-2 text-white hover:text-green-400 transition-colors font-bold text-sm uppercase"
+                >
                   <User className="w-4 h-4" /> Entrar
                 </button>
               ) : (
                 <div className="relative">
                   <button onClick={() => setShowLogout(!showLogout)} className="flex items-center gap-3 transition-all">
-                    <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full border-2 border-green-400" onError={e => e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`} />
+                    <img
+                      src={user.avatar}
+                      alt={user.username}
+                      className="w-8 h-8 rounded-full border-2 border-green-400"
+                      onError={e => (e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`)}
+                    />
                     <div className="text-left">
                       <p className="text-xs font-bold text-white leading-tight flex items-center gap-1">
                         {user.username}
@@ -212,7 +229,10 @@ export const Navigation = () => {
                   </button>
                   {showLogout && (
                     <div className="absolute top-full right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl p-2 min-w-[120px]">
-                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded transition-colors">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded transition-colors"
+                      >
                         <LogOut className="w-4 h-4" /> Sair
                       </button>
                     </div>
@@ -230,26 +250,43 @@ export const Navigation = () => {
           {isOpen && (
             <div className="md:hidden py-4 space-y-4 border-t border-border/50">
               {["inicio", "servidores", "ranking", "como-jogar", "noticias", "contato"].map(section => (
-                <button key={section} onClick={() => scrollToSection(section)} className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase">
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-primary transition-colors font-rajdhani font-semibold tracking-wider uppercase"
+                >
                   {section.toUpperCase()}
                 </button>
               ))}
 
               {adminStatus.isAdmin && !adminStatus.loading && (
-                <button onClick={navigateToAdmin} className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2">
+                <button
+                  onClick={openAdminPanel}
+                  className="block w-full text-left px-4 py-2 text-red-400 hover:text-red-300 transition-colors font-rajdhani font-semibold tracking-wider uppercase flex items-center gap-2"
+                >
                   <Shield className="w-5 h-5" /> ADMIN
                 </button>
               )}
 
-              {/* Mobile login/logout */}
               {!user ? (
-                <button onClick={() => { setIsLoginModalOpen(true); setIsOpen(false); }} className="flex items-center gap-2 w-full px-4 py-2 text-white hover:text-green-400 transition font-bold text-sm uppercase">
+                <button
+                  onClick={() => {
+                    setIsLoginModalOpen(true);
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center gap-2 w-full px-4 py-2 text-white hover:text-green-400 transition font-bold text-sm uppercase"
+                >
                   <User className="w-4 h-4" /> Entrar
                 </button>
               ) : (
                 <div className="px-4 py-2 space-y-2">
                   <div className="flex items-center gap-3">
-                    <img src={user.avatar} alt={user.username} className="w-10 h-10 rounded-full border-2 border-green-400" onError={e => e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`} />
+                    <img
+                      src={user.avatar}
+                      alt={user.username}
+                      className="w-10 h-10 rounded-full border-2 border-green-400"
+                      onError={e => (e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=00ff41&color=000&bold=true`)}
+                    />
                     <div>
                       <p className="text-sm font-bold text-white flex items-center gap-1">
                         {user.username} <span className="text-green-400">✓</span>
@@ -258,7 +295,10 @@ export const Navigation = () => {
                       <p className="text-xs text-gray-400">ID: {user.id}</p>
                     </div>
                   </div>
-                  <button onClick={handleLogout} className="w-full bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition flex items-center justify-center gap-2">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition flex items-center justify-center gap-2"
+                  >
                     <LogOut className="w-4 h-4" /> Sair
                   </button>
                 </div>
@@ -267,6 +307,21 @@ export const Navigation = () => {
           )}
         </div>
       </nav>
+
+      {/* Modal Admin */}
+      {isAdminPanelOpen && user && (
+        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-start pt-12 px-4 overflow-auto">
+          <div className="bg-background border border-border rounded-2xl p-6 max-w-7xl w-full">
+            <button
+              onClick={closeAdminPanel}
+              className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Voltar
+            </button>
+            <AdminDashboard userDiscordId={user.discordId} userRank={10} />
+          </div>
+        </div>
+      )}
 
       {/* Modal Login */}
       {isLoginModalOpen && (
@@ -286,7 +341,10 @@ export const Navigation = () => {
                   <p className="text-gray-400">Verificando suas contas...</p>
                 </div>
               ) : (
-                <button onClick={handleDiscordLogin} className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-3">
+                <button
+                  onClick={handleDiscordLogin}
+                  className="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-3"
+                >
                   Entrar com Discord
                 </button>
               )}
