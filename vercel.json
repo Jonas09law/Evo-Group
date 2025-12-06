@@ -6,8 +6,12 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/:path*", 
       "destination": "/api/:path*"
+    },
+    {
+      "source": "/(.*)", 
+      "destination": "/index.html"
     }
   ]
 }
