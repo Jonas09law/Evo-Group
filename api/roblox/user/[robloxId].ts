@@ -5,7 +5,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=60"); // cache 1h
+  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=60"); 
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (!robloxId || typeof robloxId !== "string" || isNaN(Number(robloxId))) {
@@ -13,7 +13,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-
     const response = await fetch("https://users.roblox.com/v1/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,9 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const json = await response.json();
     const user = json.data[0];
 
-    if (!user) {
-      return res.status(404).json({ error: "Usuário não encontrado" });
-    }
+    if (!user) return res.status(404).json({ error: "Usuário não encontrado" });
 
     const userData = {
       id: user.id,
