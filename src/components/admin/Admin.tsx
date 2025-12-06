@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { AdminDashboard } from "./AdminDashboard";
-import { useAdminCheck } from "@/components/hooks/useAdminCheck";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Shield } from "lucide-react";
 
 interface UserData {
