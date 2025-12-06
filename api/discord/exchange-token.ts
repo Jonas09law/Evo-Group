@@ -1,8 +1,7 @@
-// api/discord/exchange-token.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Configura CORS
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
@@ -12,22 +11,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { code } = req.body;
   if (!code) return res.status(400).json({ error: 'Code is required' });
 
-  // ⚡ Client ID hardcoded (pode ser exposto)
   const DISCORD_CLIENT_ID = "1399455643265536051";
   const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
   const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI;
 
   if (!DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI) {
-    console.error('⚠️ Discord credentials missing in environment:', {
-      DISCORD_CLIENT_SECRET: !!DISCORD_CLIENT_SECRET,
-      DISCORD_REDIRECT_URI: !!DISCORD_REDIRECT_URI,
-    });
     return res.status(500).json({ error: 'Configuração do servidor Discord ausente.' });
   }
 
   try {
     const params = new URLSearchParams({
-      client_id: DISCORD_CLIENT_ID, // já hardcoded
+      client_id: DISCORD_CLIENT_ID,
       client_secret: DISCORD_CLIENT_SECRET,
       grant_type: 'authorization_code',
       code,
@@ -43,12 +37,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const tokenData = await tokenResponse.json();
 
     if (!tokenResponse.ok) {
-      console.error('❌ Discord token exchange failed', {
-        status: tokenResponse.status,
-        statusText: tokenResponse.statusText,
-        response: tokenData,
-      });
-
       let errorMsg = 'Erro ao trocar code por token';
       if (tokenData.error === 'invalid_grant') errorMsg += ' (Código expirado ou já usado)';
       else if (tokenData.error === 'invalid_client') errorMsg += ' (Client Secret incorreto)';
@@ -57,11 +45,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: errorMsg, details: tokenData });
     }
 
-    console.log('✅ Discord token exchange success', { access_token: tokenData.access_token });
-
     return res.status(200).json(tokenData);
   } catch (err) {
-    console.error('💥 Exchange token exception:', err);
     return res.status(500).json({ error: 'Erro interno no servidor', details: err });
   }
 }
