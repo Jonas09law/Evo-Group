@@ -1,3 +1,4 @@
+// src/hooks/useAdminCheck.ts
 import { useState, useEffect } from 'react';
 
 interface AdminStatus {
@@ -20,48 +21,37 @@ export function useAdminCheck(discordId: string | null): AdminStatus {
   });
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (!discordId) {
+    if (!discordId) {
+      setAdminStatus({
+        isAdmin: false,
+        rank: 0,
+        loading: false,
+        user: null
+      });
+      return;
+    }
+
+    setAdminStatus(prev => ({ ...prev, loading: true }));
+
+    fetch(`/api/check-admin?discordId=${discordId}`)
+      .then(r => r.json())
+      .then(data => {
+        setAdminStatus({
+          isAdmin: data.isAdmin === true,
+          rank: data.rank || 0,
+          loading: false,
+          user: data.user || null
+        });
+      })
+      .catch(err => {
+        console.error('Erro ao verificar admin:', err);
         setAdminStatus({
           isAdmin: false,
           rank: 0,
           loading: false,
           user: null
         });
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/api?action=check_admin&discordId=${discordId}`);
-        const data = await response.json();
-
-        if (data.success) {
-          setAdminStatus({
-            isAdmin: data.isAdmin,
-            rank: data.rank,
-            loading: false,
-            user: data.user
-          });
-        } else {
-          setAdminStatus({
-            isAdmin: false,
-            rank: 0,
-            loading: false,
-            user: null
-          });
-        }
-      } catch (error) {
-        console.error('Error checking admin status:', error);
-        setAdminStatus({
-          isAdmin: false,
-          rank: 0,
-          loading: false,
-          user: null
-        });
-      }
-    };
-
-    checkAdminStatus();
+      });
   }, [discordId]);
 
   return adminStatus;
