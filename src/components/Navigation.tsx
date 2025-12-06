@@ -308,20 +308,22 @@ export const Navigation = () => {
         </div>
       </nav>
 
-      {/* Modal Admin */}
-      {isAdminPanelOpen && user && (
-        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-start pt-12 px-4 overflow-auto">
-          <div className="bg-background border border-border rounded-2xl p-6 max-w-7xl w-full">
-            <button
-              onClick={closeAdminPanel}
-              className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Voltar
-            </button>
-            <AdminDashboard userDiscordId={user.discordId} userRank={10} />
-          </div>
-        </div>
-      )}
+{/* Modal Admin */}
+{isAdminPanelOpen && user && (
+  <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-start overflow-auto">
+    <div className="w-full h-full max-w-none p-4 md:p-6">
+      <button
+        onClick={closeAdminPanel}
+        className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 fixed top-4 right-4 z-[210]"
+      >
+        Voltar
+      </button>
+      <div className="w-full h-full bg-background border border-border rounded-2xl p-4 md:p-6">
+        <AdminDashboard userDiscordId={user.discordId} userRank={10} />
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Modal Login */}
       {isLoginModalOpen && (
