@@ -5,49 +5,36 @@ import { AdminDashboard } from "./AdminDashboard";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Shield } from "lucide-react";
 
-interface UserData {
-  id: string;
-  username: string;
-  avatar: string;
-  discordId: string;
-  discordUsername: string;
-  discordAvatar: string;
-  verified: boolean;
-  loginDate: string;
-}
-
 const Admin = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<any>(null);
 
-  // Carregar usuário do localStorage
+  // Carrega o usuário do localStorage
   useEffect(() => {
-    const savedUser = localStorage.getItem("robloxUser");
-    if (savedUser) {
+    const saved = localStorage.getItem("robloxUser");
+    if (saved) {
       try {
-        setUser(JSON.parse(savedUser));
-      } catch (err) {
-        console.error("Error parsing user data:", err);
+        setUser(JSON.parse(saved));
+      } catch {
         navigate("/");
       }
     } else {
-      // Se não houver usuário logado, redirecionar para home
       navigate("/");
     }
   }, [navigate]);
 
-  // Admin check
-  const adminStatus = useAdminCheck(user?.discordId || null);
+  // Usa o hook novo
+  const { isAdmin, loading } = useAdminCheck(user?.discordId || null);
 
-  // Redirecionar se não for admin
+  // Se não for admin, manda embora
   useEffect(() => {
-    if (!adminStatus.loading && !adminStatus.isAdmin && user) {
+    if (!loading && !isAdmin && user) {
       navigate("/");
     }
-  }, [adminStatus, user, navigate]);
+  }, [isAdmin, loading, user, navigate]);
 
-  // Loading state
-  if (adminStatus.loading || !user) {
+  // Loading
+  if (loading || !user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -58,8 +45,8 @@ const Admin = () => {
     );
   }
 
-  // Access denied
-  if (!adminStatus.isAdmin) {
+  // Acesso negado
+  if (!isAdmin) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
@@ -81,14 +68,11 @@ const Admin = () => {
     );
   }
 
-  // Admin access granted
+  // ADMIN LIBERADO
   return (
     <>
       <Navigation />
-      <AdminDashboard 
-        userDiscordId={user.discordId} 
-        userRank={adminStatus.rank} 
-      />
+      <AdminDashboard userDiscordId={user.discordId} userRank={10} />
     </>
   );
 };
