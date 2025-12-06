@@ -44,7 +44,7 @@ export const Navigation = () => {
     setAdminStatus({ isAdmin: false, loading: true });
 
     // URL CORRETA: /api/api.php (porque o arquivo tá em public/api/api.php)
-    fetch(`/api/api.php?action=check_admin&discordId=${user.discordId}`)
+    fetch(`/api/check-admin?discordId=${user.discordId}`)
       .then(r => r.json())
       .then(data => {
         setAdminStatus({
