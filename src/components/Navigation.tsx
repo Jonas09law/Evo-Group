@@ -126,7 +126,7 @@ export const Navigation = () => {
         return;
       }
 
-let robloxUsername = `${robloxId}`;
+let robloxUsername = `${robloxUsername}`;
 let robloxDisplayName = robloxUsername;
 let robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=150&height=150&format=png`;
 
