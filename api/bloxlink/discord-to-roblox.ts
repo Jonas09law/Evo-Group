@@ -1,18 +1,29 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { discordId } = req.query;
 
-  if (!discordId || typeof discordId !== 'string') { 
-    return res.status(400).json({ error: "discordId é obrigatório" });
+  if (!discordId || typeof discordId !== 'string') {
+    return res.status(400).json({ error: 'discordId é obrigatório' });
   }
 
   const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID;
   const BLOXLINK_API_KEY = process.env.BLOXLINK_API_KEY;
 
   if (!DISCORD_SERVER_ID || !BLOXLINK_API_KEY) {
-    console.error("Missing server ID or Bloxlink API Key in environment.");
-    return res.status(500).json({ error: "Configuração do servidor Bloxlink ausente." });
+    console.error('Missing server ID or Bloxlink API Key in environment.');
+    return res.status(500).json({ error: 'Configuração do servidor Bloxlink ausente.' });
   }
 
   try {
@@ -24,11 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const data = await response.json();
-    
-    // Retorna a resposta do Bloxlink diretamente
+
     return res.status(response.status).json(data);
   } catch (err) {
-    console.error("Bloxlink API error:", err);
-    return res.status(500).json({ error: "Erro ao consultar Bloxlink" });
+    console.error('Bloxlink API error:', err);
+    return res.status(500).json({ error: 'Erro ao consultar Bloxlink', details: err });
   }
 }
