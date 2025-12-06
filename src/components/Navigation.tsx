@@ -46,12 +46,13 @@ export const Navigation = () => {
     }
   };
 
-  const handleDiscordLogin = () => {
-    const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      DISCORD_REDIRECT_URI
-    )}&response_type=code&scope=identify`;
-    window.location.href = url;
-  };
+const handleDiscordLogin = () => {
+
+  const state = Math.random().toString(36).substring(2); 
+
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=${state}`;
+  window.location.href = url;
+};
 
   const handleDiscordCallback = async (code: string) => {
     setIsLoading(true);
