@@ -24,6 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const data = await response.json();
+    
+    // Retorna a resposta do Bloxlink diretamente
     return res.status(response.status).json(data);
   } catch (err) {
     console.error("Bloxlink API error:", err);
