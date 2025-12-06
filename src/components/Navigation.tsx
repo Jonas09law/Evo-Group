@@ -3,11 +3,6 @@ import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EvoLogo from "@/assets/AAAAAA.png";
 
-const DISCORD_CLIENT_ID = "1399455643265536051";
-const DISCORD_REDIRECT_URI = window.location.origin + "/";
-const BLOXLINK_API_KEY = "ca1a7cff-bef9-4f86-b145-75e80c3d2e03";
-const DISCORD_SERVER_ID = "1201255095745130556";
-
 const ADMIN_ROBLOX_IDS = ["1171917507", "2316645590"];
 
 interface UserData {
@@ -56,9 +51,7 @@ export const Navigation = () => {
   };
 
   const handleDiscordLogin = () => {
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      DISCORD_REDIRECT_URI
-    )}&response_type=code&scope=identify`;
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + "/")}&response_type=code&scope=identify`;
     window.location.href = discordAuthUrl;
   };
 
@@ -67,23 +60,18 @@ export const Navigation = () => {
     setError("");
 
     try {
-      const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
+      // Chama sua API segura para obter o token do Discord
+      const tokenResponse = await fetch("/api/discord/callback", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          client_id: DISCORD_CLIENT_ID,
-          client_secret: "s-7cg1tLX7SlAaFOLrzWofII0GgjtugS",
-          grant_type: "authorization_code",
-          code,
-          redirect_uri: DISCORD_REDIRECT_URI,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
       });
 
       if (!tokenResponse.ok) throw new Error("Erro ao obter token do Discord");
 
-      const tokenData = await tokenResponse.json();
-      const accessToken = tokenData.access_token;
+      const { access_token: accessToken } = await tokenResponse.json();
 
+      // Pega dados do usuário no Discord
       const userResponse = await fetch("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -97,11 +85,8 @@ export const Navigation = () => {
         ? `https://cdn.discordapp.com/avatars/${discordId}/${discordUser.avatar}.png`
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(discordUsername)}&background=5865F2&color=fff&bold=true`;
 
-      const bloxlinkResponse = await fetch(
-        `https://api.blox.link/v4/public/guilds/${DISCORD_SERVER_ID}/discord-to-roblox/${discordId}`,
-        { headers: { Authorization: BLOXLINK_API_KEY } }
-      );
-
+      // Chama o Bloxlink (ainda precisa da API key no frontend se não houver backend)
+      const bloxlinkResponse = await fetch(`/api/bloxlink/${discordId}`);
       if (!bloxlinkResponse.ok) {
         setError(
           "Sua conta Discord não está linkada com Roblox no Bloxlink. Use /verify no Discord do servidor."
@@ -384,17 +369,6 @@ export const Navigation = () => {
                     </svg>
                     Entrar com Discord
                   </button>
-
-                  <div className="bg-blue-500/10 border border-blue-500/50 rounded-lg p-4">
-                    <p className="text-blue-400 text-xs font-bold mb-2">
-                      🔒 Login Seguro via Discord + Bloxlink
-                    </p>
-                    <ul className="text-blue-300 text-xs space-y-1">
-                      <li>✓ Sua conta Discord precisa estar linkada com Roblox no Bloxlink</li>
-                      <li>✓ Use o comando <code className="bg-blue-500/20 px-1 rounded">/verify</code> no servidor Discord</li>
-                      <li>✓ Login 100% seguro via OAuth2</li>
-                    </ul>
-                  </div>
                 </>
               )}
             </div>
