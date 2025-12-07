@@ -2,7 +2,7 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  
+
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const { discordId } = req.query;
@@ -18,7 +18,9 @@ export default async function handler(req, res) {
       { headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` } }
     );
 
-    if (!response.ok) return res.json({ success: true, isAdmin: false, rank: 0, user: null });
+    if (!response.ok) {
+      return res.json({ success: true, isAdmin: false, rank: 0 });
+    }
 
     const member = await response.json();
     const isAdmin = member.roles?.includes(ADMIN_ROLE_ID) || false;
@@ -37,8 +39,10 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('Erro check-admin:', err);
-    return res.json({ success: true, isAdmin: false, rank: 0, user: null });
+    return res.json({ success: true, isAdmin: false, rank: 0 });
   }
 }
 
-export const config = { api: { externalResolver: true } };
+export const config = {
+  api: { externalResolver: true },
+};
