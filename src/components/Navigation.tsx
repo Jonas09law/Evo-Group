@@ -309,7 +309,7 @@ export const Navigation = () => {
 {/* Modal Admin */}
 {isAdminPanelOpen && user && (
   <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-center overflow-auto">
-    <div className="w-full max-w-5xl p-4 md:p-6">
+    <div className="w-full max-w-7xl p-4 md:p-6">
       <button
         onClick={closeAdminPanel}
         className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 fixed top-4 right-4 z-[210]"
