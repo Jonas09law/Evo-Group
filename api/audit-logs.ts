@@ -1,17 +1,17 @@
+// api/audit-logs.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID!;
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!;
 
 const ACTION_CATEGORY_MAP: Record<number, string> = {
-  // Server
   1: "server",
 
   // Channels
   10: "channels", // create
   11: "channels", // update
   12: "channels", // delete
-  13: "channels", // overwrite
+  13: "channels", // permission overwrite
 
   // Members
   20: "members", // kick
@@ -34,56 +34,50 @@ const ACTION_CATEGORY_MAP: Record<number, string> = {
   74: "messages", // edit
   75: "messages", // pin/unpin
 
-  // Automod
+  // Moderation / Automod
   80: "moderation",
   81: "moderation"
 };
 
 // ------------------------------
-// MAIN PARSER (COMPLETO)
+// PARSE CHANGES
 // ------------------------------
 function parseChanges(actionType: number, changes: any[]) {
   if (!changes) return null;
-
   const info: any = {};
 
   for (const c of changes) {
     switch (actionType) {
-      // ---------- Canais ----------
-      case 10: // criado
-      case 12: // deletado
-      case 11: // atualizado
-        info[c.key] = { old: c.old, new: c.new };
-        break;
-
-      // ---------- Roles (add/remove) ----------
+      // ---------- Roles ----------
       case 25:
-        if (c.key === "$add")
-          info.addedRoles = c.new?.map((r: any) => ({ id: r.id, name: r.name }));
-
-        if (c.key === "$remove")
-          info.removedRoles = c.new?.map((r: any) => ({ id: r.id, name: r.name }));
+        if (c.key === "$add") info.addedRoles = c.new?.map((r: any) => ({ id: r.id, name: r.name }));
+        if (c.key === "$remove") info.removedRoles = c.new?.map((r: any) => ({ id: r.id, name: r.name }));
         break;
 
-      // ---------- Mensagens editadas ----------
-      case 74:
+      // ---------- Messages ----------
+      case 72: // delete
+        info.deletedMessage = true;
+        if (c.key === "channel_id") info.channelId = c.new;
+        break;
+      case 73: // bulk delete
+        info.bulkDeleted = true;
+        if (c.key === "channel_id") info.channelId = c.new;
+        break;
+      case 74: // edit
         if (c.key === "content") {
           info.oldContent = c.old;
           info.newContent = c.new;
         }
         break;
-
-      // ---------- Mensagens deletadas ----------
-      case 72:
-        info.deletedMessage = true;
-        if (c.key === "channel_id") info.channelId = c.new;
+      case 75: // pin/unpin
+        info.pinChange = true;
+        if (c.key === "pinned") info.pinned = c.new;
         break;
 
-      // ---------- Ban / Unban ----------
+      // ---------- Bans ----------
       case 22:
         info.type = "ban";
         break;
-
       case 23:
         info.type = "unban";
         break;
@@ -93,12 +87,19 @@ function parseChanges(actionType: number, changes: any[]) {
         info.type = "kick";
         break;
 
-      // ---------- Atualização de membro ----------
+      // ---------- Member update ----------
       case 24:
         info[c.key] = { old: c.old, new: c.new };
         break;
 
-      // ---------- Atualizações gerais (fallback) ----------
+      // ---------- Channels ----------
+      case 10:
+      case 11:
+      case 12:
+      case 13:
+        info[c.key] = { old: c.old, new: c.new };
+        break;
+
       default:
         info[c.key] = { old: c.old, new: c.new };
         break;
@@ -109,7 +110,7 @@ function parseChanges(actionType: number, changes: any[]) {
 }
 
 // ------------------------------
-// FETCH DOS LOGS
+// FETCH AUDIT LOGS
 // ------------------------------
 async function fetchDiscordAuditLogs(limit = 100) {
   try {
@@ -136,14 +137,15 @@ async function fetchDiscordAuditLogs(limit = 100) {
         id: log.id,
         action: log.action_type,
         category: ACTION_CATEGORY_MAP[log.action_type] || "unknown",
-        executor: log.user_id,
-        target: log.target_id,
+        executor: log.user_id, // quem executou
+        target: log.target_id, // quem foi afetado
         details: parseChanges(log.action_type, log.changes),
         reason: log.reason || null,
         timestamp
       };
     });
   } catch (e) {
+    console.error("Erro ao buscar logs:", e);
     return [];
   }
 }
@@ -157,31 +159,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "GET")
-    return res.status(405).json({ success: false, error: "Method not allowed" });
+  if (req.method !== "GET") return res.status(405).json({ success: false, error: "Method not allowed" });
 
   const { discordId, page = "1", category, search } = req.query as any;
 
-  if (!discordId)
-    return res.status(400).json({ success: false, error: "Missing discordId" });
+  if (!discordId) return res.status(400).json({ success: false, error: "Missing discordId" });
 
   try {
     const allLogs = await fetchDiscordAuditLogs(200);
-
     let logs = [...allLogs];
 
-    if (category && category !== "all")
-      logs = logs.filter((l) => l.category === category);
-
+    if (category && category !== "all") logs = logs.filter(l => l.category === category);
     if (search) {
       const s = search.toLowerCase();
-      logs = logs.filter((l) => JSON.stringify(l).toLowerCase().includes(s));
+      logs = logs.filter(l => JSON.stringify(l).toLowerCase().includes(s));
     }
 
-    logs.sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
+    logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     const perPage = 10;
     const current = Math.max(1, parseInt(page));
