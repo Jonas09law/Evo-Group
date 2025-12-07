@@ -31,10 +31,8 @@ export const Navigation = () => {
     loading: true,
   });
 
-  // Controle do painel Admin
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
 
-  // Verifica se o usuário tem o cargo de admin
   useEffect(() => {
     if (!user?.discordId) {
       setAdminStatus({ isAdmin: false, loading: false });
@@ -310,21 +308,21 @@ export const Navigation = () => {
 
 {/* Modal Admin */}
 {isAdminPanelOpen && user && (
-  <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-start overflow-auto">
-    <div className="w-full h-full max-w-none p-4 md:p-6">
+  <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center items-center overflow-auto">
+    <div className="w-full max-w-5xl p-4 md:p-6">
       <button
         onClick={closeAdminPanel}
         className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 fixed top-4 right-4 z-[210]"
       >
         Voltar
       </button>
-      <div className="w-full h-full bg-background border border-border rounded-2xl p-4 md:p-6">
+
+      <div className="w-full max-h-[90vh] overflow-y-auto bg-background border border-border rounded-2xl p-4 md:p-6">
         <AdminDashboard userDiscordId={user.discordId} userRank={10} />
       </div>
     </div>
   </div>
 )}
-
       {/* Modal Login */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
