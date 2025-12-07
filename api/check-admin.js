@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID!;
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!;
-const SUPER_ADMIN_DISCORD_ID = "1113945518071107705";
+const ADMIN_ROLE_ID = '1246102365203988695';
 
 let auditLogsInternal: any[] = []; // logs internos (staff add/remove/update)
 
@@ -22,8 +22,6 @@ function addAuditLog(action: string, userId: string, details: any) {
 
 // Checagem de admin
 async function isAdmin(discordId: string) {
-  if (discordId === SUPER_ADMIN_DISCORD_ID) return { isAdmin: true, rank: 10 };
-
   try {
     const res = await fetch(
       `https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${discordId}`,
@@ -31,8 +29,8 @@ async function isAdmin(discordId: string) {
     );
     if (!res.ok) return { isAdmin: false, rank: 0 };
     const member = await res.json();
-    const ADMIN_ROLE_ID = '1246102365203988695';
-    return { isAdmin: member.roles?.includes(ADMIN_ROLE_ID) || false, rank: member.roles?.includes(ADMIN_ROLE_ID) ? 10 : 0 };
+    const hasAdminRole = member.roles?.includes(ADMIN_ROLE_ID) || false;
+    return { isAdmin: hasAdminRole, rank: hasAdminRole ? 10 : 0 };
   } catch {
     return { isAdmin: false, rank: 0 };
   }
