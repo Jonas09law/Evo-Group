@@ -1,4 +1,3 @@
-// api/audit-logs.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID!;
