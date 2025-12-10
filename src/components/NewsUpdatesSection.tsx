@@ -6,6 +6,19 @@ import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
   {
+    date: "09/12/2025",
+    title: "UPDATE 2.05",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
+Agora os mecanicos podem pegar 5 kits
+Agora quando voce tentar acessar uma garagem que nao tem permissao recebera um aviso
+Arrumar spawn de carros dos mecanicos
+Arrumado alerta do atm
+Refeito efeito de atirar no carro
+Arrumado spawn do EB`,
+  },
+  {
     date: "05/12/2025",
     title: "UPDATE 2.03",
     image: atualizacao,
@@ -316,6 +329,7 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
 
 
