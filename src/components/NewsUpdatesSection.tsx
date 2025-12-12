@@ -5,6 +5,16 @@ import { useState } from "react";
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
+    {
+    date: "11/12/2025",
+    title: "UPDATE 2.06",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
+Arrumado erro de spawnar carro quebrado
+Arrumado spawn de carros dos caminhoneiros
+Varios itens policiais que estavam salvando na table do inventario foram removidos do salvamento`,
+  },
   {
     date: "09/12/2025",
     title: "UPDATE 2.05",
@@ -329,6 +339,7 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
 
 
