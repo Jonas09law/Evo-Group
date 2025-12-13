@@ -5,6 +5,39 @@ import { useState } from "react";
 import atualizacao from "@/assets/ATUALIZACAO.png";
 
 const updates = [
+            {
+    date: "13/12/2025",
+    title: "UPDATE 2.08",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
+Adicionado time, ranks,spawns e sistemas da ballas novamente
+Removido tropa da frança
+Arrumado sistemas da tdr
+Adicionado time da tr
+Agora todas as corporações e facções podem usar o /recrutamento
+Arrumado erro que quando um seat estava desabilitado ele era ligado de novo
+Alterado o modo como era calculado a distancia do carro no posto de gasolina
+Agora ao atirar na lataria do Uno ele quebra (nao só na frente)
+Agora eu bater qualquer parte da lataria do Uno tambem quebra
+Arrumado o pulo ao rolar
+Diminuido JumpHeight do jogador
+Arrumado emprego de caminhoneiro
+Removido DZ7 do jogo
+Adicionado Ballas e Groove novamente`,
+  },
+        {
+    date: "12/12/2025",
+    title: "UPDATE 2.07",
+    image: atualizacao,
+    category: "PATCH NOTES",
+    contentText: `
+Arrumado aviso ao tentar revistar jogador vivo
+Arrumado sirene do SAMU
+Adicionado armario de fardas para o samu
+Arrumado erro no menu
+Arrumado erros de sons`,
+  },
     {
     date: "11/12/2025",
     title: "UPDATE 2.06",
@@ -339,6 +372,7 @@ export default function NewsUpdatesSection() {
     </>
   );
 }
+
 
 
 
